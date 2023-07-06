@@ -1,0 +1,9 @@
+.history_shifts_container{
+    /* border-right: 1px solid #e5e5e5; */
+    height: 80%;
+    overflow-y: auto;
+}
+
+.history_shifts_operation{
+    margin-top: 1rem;
+}

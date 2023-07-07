@@ -1,0 +1,13 @@
+.icon{
+    transition: background-color .3s;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.icon:hover{
+    background-color: lightgrey;
+}
+
+.icon:active{
+    background-color: grey
+}

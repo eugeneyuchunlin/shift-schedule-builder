@@ -4,9 +4,18 @@ import styles from './shift_configuration.module.css'
 import Divider from '@/app/components/divider'
 import Tag from './tag'
 import TagBox from './tagbox'
+import { ChangeEvent } from 'react'
+import { Constraint } from '../../shift_config_def'
 
-export default function ShiftConfiguration(){
+export default function ShiftConfiguration({onShiftConfigChange, onAddingShiftConstraint} : {onShiftConfigChange: (config: {})=>void, onAddingShiftConstraint: (constraint: Constraint)=>void}){
 
+    const handleDaysChange = (e: ChangeEvent<HTMLInputElement>)=>{
+        onShiftConfigChange({days: e.target.value})
+    }
+
+    const handleNoWChange = (e: ChangeEvent<HTMLInputElement>)=>{
+        onShiftConfigChange({number_of_workers: e.target.value})
+    }
 
     return (
         <>
@@ -17,33 +26,30 @@ export default function ShiftConfiguration(){
                     <Divider text='Shift Configuration' />
                 </Row>   
                 <Row className={styles.rows}>
-                    <Col>
-                        <FloatingLabel controlId="floatingInputGrid" label="Year">
-                            <Form.Control type="text" placeholder="Year" />
+                    <Col sm={4}>
+                        <FloatingLabel controlId="floatingInputGrid" label="Days">
+                            <Form.Control 
+                                type="number"
+                                placeholder="Days"
+                                onChange={handleDaysChange}
+                        />
                         </FloatingLabel> 
                     </Col> 
                     <Col>
-                        <FloatingLabel controlId="floatingInputGrid" label="Month">
-                            <Form.Control type="text" placeholder="Month" />
+                        <FloatingLabel controlId="floatingInputGrid" label="Number of workers">
+                            <Form.Control 
+                                type="number"
+                                placeholder='Number of workers'
+                                onChange={handleNoWChange}
+                            />
                         </FloatingLabel>
                     </Col>
                 </Row>
-                {/* <Row className={styles.rows}>
-                    <Col>
-                        <FloatingLabel controlId="floatingInputGrid" label="Monthly Leave">
-                            <Form.Control aria-describedby="basic-addon2" size="lg" placeholder='Monthly Leave'/>
-                        </FloatingLabel>
-                    </Col>
-                </Row> */}
                 <Row className={styles.rows}>
+                   
                     <Col>
-                        <FloatingLabel controlId="floatingInputGrid" label="Number of workers">
-                            <Form.Control aria-describedby="basic-addon2" size="lg" placeholder='Number of workers'/>
-                        </FloatingLabel>
-                    </Col>
-                    <Col>
-                        <FloatingLabel controlId="floatingInputGrid" label="Computation Time">
-                            <Form.Control aria-describedby="basic-addon2" size="lg" placeholder='Computation Time'/>
+                        <FloatingLabel controlId="floatingInputGrid" label="Computation Time(sec)">
+                            <Form.Control aria-describedby="basic-addon2" placeholder='Computation Time(sec)'/>
                         </FloatingLabel>
                     </Col>
                 </Row>
@@ -52,20 +58,10 @@ export default function ShiftConfiguration(){
                 </Row>
                 <Row className={styles.rows}>
                     <Col>
-                        <TagBox />
+                        <TagBox onAddingShiftConstraint={onAddingShiftConstraint}/>
                     </Col>
                 </Row>
-                {/* <Row className={styles.rows}> */}
-                    {/* <Col sm={12}> */}
-                        {/* <Button variant="primary">Submit</Button> */}
-                    {/* </Col> */}
-                {/* </Row> */}
             </Form>
-             
-            {/* <Row className={styles.divider}>
-                <hr />
-            </Row> */}
-
         </Container>
         </>
     )

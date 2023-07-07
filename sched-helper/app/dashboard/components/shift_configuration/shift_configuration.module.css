@@ -6,6 +6,8 @@
 .form_block{
     margin-top: 1rem;
     border-left: 2px solid #e5e5e5;
+    /* overflow-y: scroll;
+    height: 80%; */
 }
 
 .rows{

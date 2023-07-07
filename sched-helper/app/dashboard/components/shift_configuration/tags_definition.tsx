@@ -1,11 +1,12 @@
 export interface TagParameter{
     parameter_name: string;
-    parameter_alias?: string;
+    parameter_alias: string;
     parameter_description: string;
 }
 
 export interface TagProps{
     text: string;
+    key: string;
     description: string;
     parameters: TagParameter[];
 }
@@ -13,6 +14,7 @@ export interface TagProps{
 export const TagsDefinition : TagProps[] = [
     {
         text: 'Expected working days',
+        key: 'expected_working_days',
         description: `The number of working days that the employee is expected to work in a month`,
         parameters: [
             {
@@ -24,11 +26,13 @@ export const TagsDefinition : TagProps[] = [
     },
     {
         text: 'Customize leave',
+        key: 'customize_leave',
         description: `You are able to customize the leave for each employee, please edit the shift for each employee`,
         parameters: []
     },
     {
         text: 'Expected number of workers per shift',
+        key: 'expected_number_of_workers_per_shift',
         description: `The number of workers that the employee is expected to work in a shift`,
         parameters: [
             {
@@ -40,6 +44,7 @@ export const TagsDefinition : TagProps[] = [
     },
     {
         text: 'Maximum consecutive working days',
+        key: 'maximum_consecutive_working_days',
         description: `The maximum number of consecutive working days that the employee is expected to work`,
         parameters: [
             {
@@ -51,6 +56,7 @@ export const TagsDefinition : TagProps[] = [
     },
     {
         text: 'Minimum n-days leave within 7-days',
+        key: 'minimum_n_days_leave_within_7_days',
         description: `The minimum number of days that the employee is expected to take leave within 7 days`,
         parameters: [
             {
@@ -62,11 +68,13 @@ export const TagsDefinition : TagProps[] = [
     },
     {
         text: 'Successive shift pair',
+        key: 'successive_shift_pair',
         description: `The number of successive shift pair that the employee is expected to work`,
         parameters: []
     },
     {
         text: 'Consecutive 2 days leave',
+        key: 'consecutive_2_days_leave',
         description: `The number of consecutive 2 days leave that the employee is expected to take`,
         parameters: []
     },

@@ -1,0 +1,6 @@
+.headcol {
+    position: sticky;
+    left: 0;
+    width: 3rem;
+    z-index: 1;
+}

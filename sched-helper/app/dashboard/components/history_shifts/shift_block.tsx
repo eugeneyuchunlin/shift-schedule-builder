@@ -12,6 +12,7 @@ export default function ShiftBlock({name }: {name: string}) {
   const [isDelete, setIsDelete] = useState(false);
 
   const edit = () => {
+    console.log("Edit")
     setIsEdit(true);
   };
 
@@ -25,13 +26,14 @@ export default function ShiftBlock({name }: {name: string}) {
   };
 
   const save = () => {
+    // console.log("Save")
     setIsEdit(false);
 
     // TODO: save to database
   }
 
   const deleteShift = () =>{
-    console.log("delete");
+    // console.log("delete");
     setIsDelete(true); 
   }
 
@@ -49,19 +51,19 @@ export default function ShiftBlock({name }: {name: string}) {
                 value={inputValue}
                 className={styles.shift_block_input}
                 onChange={handleChange}
-                onClick={edit}
-                onBlur={noedit}
+                // onBlur={noedit}
+                readOnly={!isEdit}
               />
           </Col>
           <Col sm={2}>
-            {isEdit || isEdited ? (
+            {isEdit? (
               <Image src="/save.svg" width={30} height={30} alt="edit" onClick={save} className={styles.icon}/>
             ) : (
-              <></>
+              <Image src="/edit.svg" width={30} height={30} alt="edit" onClick={edit} className={styles.icon}/>
             )}
           </Col>
           <Col sm={2}>
-            <Image src="/delete.svg" width={20} height={20} alt="delete" onClick={deleteShift} className={styles.icon}/>
+            <Image src="/delete.svg" width={30} height={30} alt="delete" onClick={deleteShift} className={styles.icon}/>
           </Col>
         </Row>
       </Form>

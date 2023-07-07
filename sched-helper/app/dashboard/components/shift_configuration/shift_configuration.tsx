@@ -19,48 +19,52 @@ export default function ShiftConfiguration({onShiftConfigChange, onAddingShiftCo
 
     return (
         <>
-        <Container className={styles.form_block}>
-            
+        <Container>
             <Form className={styles.form} as={Row}>
-                <Row className={`${styles.rows} ${styles.divider}`}>
-                    <Divider text='Shift Configuration' />
-                </Row>   
-                <Row className={styles.rows}>
-                    <Col sm={4}>
-                        <FloatingLabel controlId="floatingInputGrid" label="Days">
-                            <Form.Control 
-                                type="number"
-                                placeholder="Days"
-                                onChange={handleDaysChange}
-                        />
-                        </FloatingLabel> 
-                    </Col> 
-                    <Col>
-                        <FloatingLabel controlId="floatingInputGrid" label="Number of workers">
-                            <Form.Control 
-                                type="number"
-                                placeholder='Number of workers'
-                                onChange={handleNoWChange}
+                <div className={styles.section}>
+                    <Row className={`${styles.rows} ${styles.divider}`}>
+                        {/* <Divider text='Shift Configuration' /> */}
+                        <h6>Shift Configuration</h6>
+                    </Row>   
+                    <Row className={styles.rows}>
+                        <Col sm={4}>
+                            <FloatingLabel controlId="floatingInputGrid" label="Days">
+                                <Form.Control 
+                                    type="number"
+                                    placeholder="Days"
+                                    onChange={handleDaysChange}
                             />
-                        </FloatingLabel>
-                    </Col>
-                </Row>
-                <Row className={styles.rows}>
-                   
-                    <Col>
-                        <FloatingLabel controlId="floatingInputGrid" label="Computation Time(sec)">
-                            <Form.Control aria-describedby="basic-addon2" placeholder='Computation Time(sec)'/>
-                        </FloatingLabel>
-                    </Col>
-                </Row>
-                <Row className={`${styles.rows} ${styles.divider}`}>
-                    <Divider text='Constraints' />
-                </Row>
-                <Row className={styles.rows}>
-                    <Col>
-                        <TagBox onAddingShiftConstraint={onAddingShiftConstraint}/>
-                    </Col>
-                </Row>
+                            </FloatingLabel> 
+                        </Col> 
+                        <Col>
+                            <FloatingLabel controlId="floatingInputGrid" label="Number of workers">
+                                <Form.Control 
+                                    type="number"
+                                    placeholder='Number of workers'
+                                    onChange={handleNoWChange}
+                                />
+                            </FloatingLabel>
+                        </Col>
+                    </Row>
+                    <Row className={styles.rows}>
+
+                        <Col>
+                            <FloatingLabel controlId="floatingInputGrid" label="Computation Time(sec)">
+                                <Form.Control aria-describedby="basic-addon2" placeholder='Computation Time(sec)'/>
+                            </FloatingLabel>
+                        </Col>
+                    </Row>
+                </div>
+                <div className={styles.section}>
+                    <Row className={`${styles.rows} ${styles.divider}`}>
+                        <h6>Constraints</h6>
+                    </Row>
+                    <Row className={styles.rows}>
+                        <Col>
+                            <TagBox onAddingShiftConstraint={onAddingShiftConstraint}/>
+                        </Col>
+                    </Row>
+                </div>
             </Form>
         </Container>
         </>

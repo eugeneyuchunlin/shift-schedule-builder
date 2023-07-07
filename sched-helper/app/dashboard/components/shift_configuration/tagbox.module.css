@@ -12,6 +12,7 @@
     margin-top: .5rem;
     border: 1px solid #dddddd;
     border-radius: 5px;
-    height: 15rem;
+    height: 10rem;
     padding: .5rem;
+    overflow-y: scroll;
 }

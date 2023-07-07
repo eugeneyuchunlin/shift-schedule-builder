@@ -3,11 +3,12 @@
     /* height: 100%; */
 }
 
-.form_block{
+.section{
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(33,33,33,.2);
+    padding-bottom: 1rem;
     margin-top: 1rem;
-    border-left: 2px solid #e5e5e5;
-    /* overflow-y: scroll;
-    height: 80%; */
 }
 
 .rows{

@@ -4,3 +4,7 @@
     width: 3rem;
     z-index: 1;
 }
+
+.headcol input{
+    width: 5rem;
+}

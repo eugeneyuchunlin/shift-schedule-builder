@@ -1,0 +1,11 @@
+.element{
+    outline: none;
+    border: none;
+    width: 2rem;
+    transition: background-color .3s;
+    border-radius: 5px;
+}
+
+.element:focus{
+    background-color: rgb(237, 234, 234);
+}

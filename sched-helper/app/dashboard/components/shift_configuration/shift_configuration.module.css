@@ -1,0 +1,22 @@
+.form{
+    padding-left: 0.5rem;
+    /* height: 100%; */
+}
+
+.form_block{
+    margin-top: 1rem;
+    border-left: 2px solid #e5e5e5;
+}
+
+.rows{
+    margin-top: .5rem;
+}
+
+.divider{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* .models{ */
+/*  */
+/* } */

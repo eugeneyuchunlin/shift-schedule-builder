@@ -8,3 +8,7 @@ html, body{
     height: 100%;
     background-color: rgba(245, 247, 250, 1) !important;
 }
+
+button{
+    outline: none;
+}

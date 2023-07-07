@@ -1,0 +1,29 @@
+
+.tag:hover{
+    background-color: #ddd;
+}
+
+.text{
+    cursor: pointer;
+}
+
+
+.tag {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+    background-color: transparent;
+    border: none;
+    color: #888888;
+    font-size: 0.8rem;
+    cursor: pointer;
+}

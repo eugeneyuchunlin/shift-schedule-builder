@@ -76,7 +76,12 @@ export default function ShiftView({ props }: { props: ShiftConfig }) {
                             />
                         </Row>
                     </Container>
-                </> : <h1>Select a shift</h1>
+                </> : 
+                <>
+                    <Container className={styles.empty_shift} fluid>
+                        <span className={styles.text}>Create or choose a shift to start</span>
+                    </Container>
+                </>
             }
 
         </>

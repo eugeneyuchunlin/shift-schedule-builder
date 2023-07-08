@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 // import delete_svg from '@app/public/delete.svg'
 
-export default function ShiftBlock({name }: {name: string}) {
+export default function ShiftBlock({name, onSelectShift}: {name: string, onSelectShift: (shift_id: string)=>void}) {
   const [isEdit, setIsEdit] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [inputValue, setInputValue] = useState(name);

@@ -6,7 +6,7 @@ import { Container, Row, Col, Button, Offcanvas, Nav } from '@/app/components/bo
 import ShiftBlock from './shift_block';
 import styles from './history_shift.module.css';
 
-export default function HistoryShifts() {
+export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_id: string) => void}) {
   const [show, setShow] = useState(false);
 
   type ShiftDataType = {
@@ -16,11 +16,24 @@ export default function HistoryShifts() {
 
   const [shifts, setShifts] = useState<ShiftDataType[]>([]);
 
-  const addShift = () => {
-    const newShifts = [...shifts, { name: 'shift name' + shifts.length, id: shifts.length }];
-    setShifts(newShifts);
-
-    // TODO: save to database
+  const addShift = async () => {
+    const shift_name = 'Untitled ' + shifts.length;
+    
+    try{
+      const res = await fetch('/dashboard/api/shifts/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({name: shift_name}),
+      });
+      const json = await res.json();
+      const newShifts = [...shifts, { name: shift_name, id: json.shift_id }];
+      setShifts(newShifts);
+      onSelectShift(json.shift_id)
+    }catch(err){
+      console.log(err);
+    }
   };
 
   return (
@@ -40,7 +53,7 @@ export default function HistoryShifts() {
           </Container>
           <Container className={styles.history_shifts_container} fluid>
             {shifts.map((shift) => (
-              <ShiftBlock key={shift.id} name={shift.name} />
+              <ShiftBlock key={shift.id} name={shift.name} onSelectShift={onSelectShift}/>
             ))}
           </Container>
           <Container className={styles.history_shifts_operation} fluid>

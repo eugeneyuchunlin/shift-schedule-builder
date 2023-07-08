@@ -39,10 +39,14 @@ export default function Page() {
         });
     };
 
+    const handleSelectingShift = (shift_id: string) => {
+        console.log("Selecting shift: " + shift_id);
+    }
+
 
     return (
         <>
-            <HistoryShifts />
+            <HistoryShifts onSelectShift={handleSelectingShift}/>
             <Container fluid id={styles.main_container}>
                 <Row id={styles.main_view}>
                     <Col sm={8}>

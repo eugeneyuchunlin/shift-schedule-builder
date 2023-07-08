@@ -9,6 +9,8 @@ export interface Constraint{
 }
 
 export interface ShiftConfig {
+    name: string,
+    shift_id : string,
     days: number;
     number_of_workers: number;
     computation_time: number;

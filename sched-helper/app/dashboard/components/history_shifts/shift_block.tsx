@@ -46,10 +46,10 @@ export default function ShiftBlock({name, shift_id, onSelectShift}: {name: strin
   }
 
   return (
-    <Row className={styles.history_shift} onClick={handleChooseShift}>
+    <Row className={styles.history_shift} >
       <Form>
         <Row>
-          <Col sm={8}>
+          <Col sm={8} onClick={handleChooseShift}>
               <input
                 type="text"
                 value={inputValue}

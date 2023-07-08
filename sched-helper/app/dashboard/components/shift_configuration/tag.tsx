@@ -1,21 +1,23 @@
-'use client'
 import React, { ChangeEvent, useState } from 'react';
 import styles from './tag.module.css';
-import Image from 'next/image'
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap'
+import Image from 'next/image';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { TagProps } from './tags_definition';
 import { Constraint } from '../../shift_config_def';
 
-
-
-export default function Tag(
-    { props, plus, action, onAddingShiftConstraint }: 
-    { props: TagProps; 
-      plus: boolean, action: () => void, 
-      onAddingShiftConstraint: (constraint: Constraint) => void
-    }){
+export default function Tag({
+    props,
+    plus,
+    action,
+    onAddingShiftConstraint,
+}: {
+    props: TagProps;
+    plus: boolean;
+    action: () => void;
+    onAddingShiftConstraint: (constraint: Constraint) => void;
+}) {
     const [show, setShow] = useState(false);
-    const [formValues, setFormValues] = useState([]);
+    const [formValues, setFormValues] = useState({});
 
     const handleClick = () => {
         if (plus) {
@@ -23,37 +25,37 @@ export default function Tag(
         } else {
             action();
         }
-    }
+    };
 
     const handleClose = () => {
         setShow(false);
-    }
+    };
 
     const handleAdd = () => {
         handleClose();
         action();
-        console.log(formValues)
-        onAddingShiftConstraint({name: props.key, parameters: formValues});
-    }
-
+        const parameters = Object.entries(formValues).map(([key, value]) => ({
+            parameter_name: key,
+            parameter_value: Number(value),
+        }));
+        onAddingShiftConstraint({ name: props.key, parameters: parameters });
+        setFormValues({})
+    };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        const updatedConfig: any = {
-            "parameter_name": name,
-            "parameter_value": value
-        }
-        const updatedFormValues: any = [...formValues];
-        updatedFormValues.push(updatedConfig);
-        setFormValues(updatedFormValues);
-    }
+        setFormValues((prevFormValues) => ({
+            ...prevFormValues,
+            [name]: value,
+        }));
+    };
 
     return (
         <>
             <div className={styles.tag} onClick={handleClick}>
                 <span onClick={() => { console.log("click") }} className={styles.text}>{props.text}</span>
                 <button className={styles.button}>
-                    {plus ? <Image src="/add.svg" width={10} height={10} alt="add"></Image> : <>&#x2715;</>}
+                    {plus ? <Image src="/add.svg" width={10} height={10} alt="add" /> : <>&#x2715;</>}
                 </button>
             </div>
 
@@ -66,18 +68,18 @@ export default function Tag(
                     <p>{props.description}</p>
                     <Form>
                         {props.parameters.map((parameter, index) => (
-                            <Form.Group as={Row} className="mb-3" controlId="form" key={index}>
+                            <Form.Group as={Row} className="mb-3" controlId={`form${index}`} key={index}>
                                 <Form.Label column sm="6">{parameter.parameter_name}</Form.Label>
                                 <Col sm="6">
                                     <Form.Control
                                         type="text"
-                                        name={parameter.parameter_alias}
+                                        name={parameter.parameter_name}
                                         onChange={handleInputChange}
                                     />
                                 </Col>
                             </Form.Group>
                         ))}
-                        <Form.Group as={Row} className="mb-3" controlId="form" key={props.parameters.length}>
+                        <Form.Group as={Row} className="mb-3" controlId={`form${props.parameters.length}`}>
                             <Form.Label column sm="6">Weight</Form.Label>
                             <Col sm="6">
                                 <Form.Control

@@ -5,7 +5,7 @@ import { TagProps, TagParameter, TagsDefinition } from './tags_definition';
 import { Constraint } from '../../shift_config_def';
 
 
-export default function TagBox({onAddingShiftConstraint} : {onAddingShiftConstraint: (constraint: Constraint)=>void}){
+export default function TagBox({onAddingShiftConstraint, onRemovingConstraint} : {onAddingShiftConstraint: (constraint: Constraint)=>void, onRemovingConstraint: (constraint_name: string)=>void}){
 
     const [initialTags, setinitialTags] = useState<TagProps[]>(TagsDefinition);
 
@@ -26,6 +26,8 @@ export default function TagBox({onAddingShiftConstraint} : {onAddingShiftConstra
 
         const updatedInitialTags = [...initialTags, tag];
         setinitialTags(updatedInitialTags)
+
+        onRemovingConstraint(tag.key)
     }
 
 

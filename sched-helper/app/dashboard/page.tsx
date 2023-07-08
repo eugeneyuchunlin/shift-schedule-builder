@@ -24,6 +24,17 @@ export default function Page() {
         });
     };
 
+    const handleRemovingConstraint = (constraint_name: string): void => {
+        setShiftConfig((prevConfig) => {
+            const updatedConfig: ShiftConfig = {
+                ...prevConfig,
+                constraints: prevConfig.constraints?.filter((constraint) => constraint.name !== constraint_name),
+            };
+            console.log(updatedConfig)
+            return updatedConfig;
+        });
+    }
+
 
     const handleShiftConfigChange = (newConfig: any): void => {
         setShiftConfig((prevConfig) => {
@@ -34,7 +45,7 @@ export default function Page() {
             for (const [key, value] of Object.entries(newConfig)) {
                 updatedConfig[key] = value;
             }
-            console.log(updatedConfig);
+            // console.log(updatedConfig);
             return updatedConfig;
         });
     };
@@ -54,7 +65,11 @@ export default function Page() {
                         <ShiftView props={shiftConfig}/>
                     </Col>
                     <Col>
-                        <ShiftConfiguration onShiftConfigChange={handleShiftConfigChange} onAddingShiftConstraint={handleAddingConstraint} />
+                        <ShiftConfiguration 
+                            onShiftConfigChange={handleShiftConfigChange} 
+                            onAddingShiftConstraint={handleAddingConstraint} 
+                            onRemovingConstraint={handleRemovingConstraint} 
+                        />
                     </Col>
                 </Row>
             </Container>

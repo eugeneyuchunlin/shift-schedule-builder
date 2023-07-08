@@ -1,17 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/app/components/navbar';
 import { Container, Row, Col, Button, Offcanvas, Nav } from '@/app/components/bootstrap';
 import ShiftBlock from './shift_block';
 import styles from './history_shift.module.css';
+import { StringMappingType } from 'typescript';
 
-export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_id: string) => void}) {
+export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_name: string, shift_id: string) => void}) {
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+
+
+  }, [])
 
   type ShiftDataType = {
     name: string;
-    id: number;
+    id: string;
   }
 
   const [shifts, setShifts] = useState<ShiftDataType[]>([]);
@@ -30,7 +36,7 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_id:
       const json = await res.json();
       const newShifts = [...shifts, { name: shift_name, id: json.shift_id }];
       setShifts(newShifts);
-      onSelectShift(json.shift_id)
+      onSelectShift(shift_name, json.shift_id)
     }catch(err){
       console.log(err);
     }
@@ -53,7 +59,12 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_id:
           </Container>
           <Container className={styles.history_shifts_container} fluid>
             {shifts.map((shift) => (
-              <ShiftBlock key={shift.id} name={shift.name} onSelectShift={onSelectShift}/>
+              <ShiftBlock 
+                key={shift.id} 
+                shift_id={shift.id} 
+                name={shift.name} 
+                onSelectShift={(name:string, shift_id:string) => {onSelectShift(name, shift_id), setShow(false)}}
+              />
             ))}
           </Container>
           <Container className={styles.history_shifts_operation} fluid>

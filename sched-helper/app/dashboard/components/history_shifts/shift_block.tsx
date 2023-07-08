@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 // import delete_svg from '@app/public/delete.svg'
 
-export default function ShiftBlock({name, onSelectShift}: {name: string, onSelectShift: (shift_id: string)=>void}) {
+export default function ShiftBlock({name, shift_id, onSelectShift}: {name: string, shift_id: string, onSelectShift: (shift_name: string, shift_id: string)=>void}) {
   const [isEdit, setIsEdit] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [inputValue, setInputValue] = useState(name);
@@ -37,12 +37,16 @@ export default function ShiftBlock({name, onSelectShift}: {name: string, onSelec
     setIsDelete(true); 
   }
 
+  const handleChooseShift = () => {
+    onSelectShift(name, shift_id);
+  }
+
   if (isDelete) {
     return <></>;
   }
 
   return (
-    <Row className={styles.history_shift}>
+    <Row className={styles.history_shift} onClick={handleChooseShift}>
       <Form>
         <Row>
           <Col sm={8}>

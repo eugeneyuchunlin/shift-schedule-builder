@@ -39,8 +39,9 @@ export default function Page() {
         });
     };
 
-    const handleSelectingShift = (shift_id: string) => {
+    const handleSelectingShift = (shift_name: string, shift_id: string) => {
         console.log("Selecting shift: " + shift_id);
+        handleShiftConfigChange({name: shift_name, shift_id: shift_id});
     }
 
 

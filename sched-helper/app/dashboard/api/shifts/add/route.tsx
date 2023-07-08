@@ -3,7 +3,6 @@ import { NextResponse, NextRequest } from "next/server";
 
 import { z } from "zod";
 import {v4 as uuidv4} from 'uuid';
-import { unique } from "next/dist/build/utils";
 
 const schema = z.object({
     name: z.string(),

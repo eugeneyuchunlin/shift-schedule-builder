@@ -7,20 +7,26 @@ import styles from './shift_view.module.css'
 import { ShiftConfig } from '../../shift_config_def'
 
 export default function ShiftView({props} : {props: ShiftConfig}){
+    
 
     return (
         <>
-            <Container className={styles.shift_container} fluid>
-                <Row>
-                    <Banner shift_name='Shift 1' />
-                </Row>
-                <Row>
-                    <hr />
-                </Row> 
-                <Row>
-                    <Shift props={props}/>
-                </Row> 
-            </Container> 
+        {
+            props.shift_id ? <>
+                <Container className={styles.shift_container} fluid>
+                    <Row>
+                        <Banner shift_name={props.name} />
+                    </Row>
+                    <Row>
+                        <hr />
+                    </Row> 
+                    <Row>
+                        <Shift props={props}/>
+                    </Row> 
+                </Container> 
+            </> : <h1>Select a shift</h1>
+        }
+            
         </>
     )
 }

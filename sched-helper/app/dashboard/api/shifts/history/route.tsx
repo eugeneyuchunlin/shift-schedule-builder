@@ -5,7 +5,7 @@ export async function GET(request: Request){
     try{
         const client = await clientPromise;
         const db = await client.db();
-        const collection = await db.collection('shifts');
+        const collection = await db.collection('shifts-list');
         const shifts = await collection.find({}).toArray();
         return NextResponse.json({"message" : "success", "data": shifts});
 

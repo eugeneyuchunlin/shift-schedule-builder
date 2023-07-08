@@ -26,10 +26,19 @@ export default function ShiftBlock({name, shift_id, onSelectShift}: {name: strin
   };
 
   const save = () => {
-    // console.log("Save")
-    setIsEdit(false);
 
     // TODO: save to database
+    fetch('/dashboard/api/shifts/rename', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({shift_id: shift_id, name: inputValue}),
+    }).then((res) => res.json()).then((json) => {
+      console.log(json);
+      onSelectShift(inputValue, shift_id);
+      setIsEdit(false);
+    })
   }
 
   const deleteShift = () =>{
@@ -38,7 +47,9 @@ export default function ShiftBlock({name, shift_id, onSelectShift}: {name: strin
   }
 
   const handleChooseShift = () => {
-    onSelectShift(name, shift_id);
+    if(!isEdit){
+      onSelectShift(name, shift_id);
+    }
   }
 
   if (isDelete) {

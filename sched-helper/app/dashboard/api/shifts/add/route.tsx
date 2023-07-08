@@ -24,7 +24,7 @@ export async function POST(request: Request){
 
         const client = await clientPromise;
         const db = await client.db();
-        const collection = await db.collection('shifts');
+        const collection = await db.collection('shifts-list');
         await collection.insertOne({shift_name: body.name, shift_id: uniqueId});
         return NextResponse.json({"shift_id": uniqueId});
     }catch(err){

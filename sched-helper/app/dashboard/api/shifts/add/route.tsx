@@ -8,9 +8,9 @@ const schema = z.object({
     name: z.string(),
 })
 
-export async function GET(request: Request){
-    return NextResponse.json({"shift_id": "success"})
-}
+// export async function GET(request: Request){
+//     return NextResponse.json({"shift_id": "success"})
+// }
 
 export async function POST(request: Request){
     try{

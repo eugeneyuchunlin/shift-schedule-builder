@@ -11,8 +11,23 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_nam
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    // load shifts
+    const loadShifts = async () => {
+      fetch('/dashboard/api/shifts/history', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((res) => res.json()).then((json) => {
+        const newShifts = json.data.map((shift: any) => {
+          return { name: shift.shift_name, id: shift.shift_id };
+        });
+        setShifts(newShifts);
+      })
 
+    };
 
+    loadShifts();
   }, [])
 
   type ShiftDataType = {

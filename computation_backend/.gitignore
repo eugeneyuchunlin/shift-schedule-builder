@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.env
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Project-specific
+settings.ini
+database.sqlite3
+
+# Miscellaneous
+*.swp
+*.bak
+*.log
+*.cache
+*.csv
+
+# Ignore specific files
+filename.txt
+

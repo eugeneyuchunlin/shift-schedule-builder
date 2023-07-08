@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import styles from './banner.module.css'
 import {Container, Row, Col, Navbar, Nav} from 'react-bootstrap'
@@ -6,6 +7,33 @@ import { ShiftConfig } from '../../shift_config_def'
 import { ShiftContent } from '../shift/shift'
 
 export default function Banner({props, shift_content} : {props: ShiftConfig, shift_content: ShiftContent}) {
+
+    const taskSocketRef = useRef<WebSocket | null>(null);
+    useEffect(()=> {
+        taskSocketRef.current = new WebSocket(
+            "ws://127.0.0.1:8000" + 
+            `/ws/tasks/${props.shift_id}/`
+        );
+
+        const taskSocket = taskSocketRef.current;
+
+        taskSocket.onopen = function (e) {
+            console.log("Task socket connected");
+        }
+
+        taskSocket.onclose = function (e) {
+            console.log("Task socket disconnected");
+        }
+
+        taskSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log(data);
+        }
+
+        return () => {
+            taskSocket.close();
+        }
+    }, [props.shift_id]) 
 
     const handleRun = () => {
         console.log("Run");
@@ -18,7 +46,9 @@ export default function Banner({props, shift_content} : {props: ShiftConfig, shi
             constraints: props.constraints,
             content: shift_content.content,
         }
-        console.log(data);
+        if(taskSocketRef.current) {
+            taskSocketRef.current.send(JSON.stringify(data));
+        }
     }
 
 

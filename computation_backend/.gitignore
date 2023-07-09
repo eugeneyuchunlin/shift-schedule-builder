@@ -30,6 +30,7 @@ database.sqlite3
 *.log
 *.cache
 *.csv
+*.json
 
 # Ignore specific files
 filename.txt

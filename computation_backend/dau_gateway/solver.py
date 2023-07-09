@@ -5,7 +5,6 @@ import re
 import numpy as np
 import pandas as pd
 from pyqubo import Array, Num
-from constraints import CONSTRAINTS
 
 try:
     from django.conf import settings
@@ -13,6 +12,7 @@ try:
     dma_url = settings.DMA_URL
     api_key = settings.DAU_API_KEY
     dma_api_key = settings.DMA_API_KEY
+    MONGODB_URL = settings.MONGODB_URL
 except:
     import yaml
 
@@ -23,7 +23,28 @@ except:
     dma_url = config['DMA_URL']
     api_key = config['DAU_API_KEY']
     dma_api_key = config['DMA_API_KEY']
+    MONGODB_URL = config['MONGODB_URL']
     pass
+
+try:
+    from . import db_client
+except:
+    from pymongo.mongo_client import MongoClient
+    from pymongo.server_api import ServerApi
+
+    db_client = MongoClient(MONGODB_URL, server_api=ServerApi('1'))
+    try:
+        db_client.admin.command('ping')
+        print('MongoDB connected')
+    except Exception as e:
+        print(e)
+
+try:
+    from .constraints import CONSTRAINTS
+except:
+    from constraints import CONSTRAINTS
+
+
 
 
 class DAUSolver():
@@ -53,6 +74,12 @@ class DAUSolver():
                 self._inequality_constraints.append(
                     CONSTRAINTS[name]['function'](self._X, **constraints[i]['parameters'])
                 )
+
+        content = problem['content']
+        self._namelist = []
+        for i in range(len(content)):
+            self._namelist.append(content[i]['name'])
+        print(self._namelist)
 
     def _get_matrix_term(self, matrix_element:dict, variables:list) -> list:
         """Get the matrix term from the qubo and variables
@@ -195,12 +222,13 @@ class DAUSolver():
         return data
     
     def _generate_shift_from_solution(self, solution_dict):
-        table = np.zeros((self._number_of_workers, self._days))
+        table = np.zeros((self._number_of_workers, self._days), dtype=int)
         for key, value in solution_dict.items():
             if "x" in key and "*" not in key:
                 indexes = re.findall(r'\[(\d+)\]', key)
                 indexes = [int(index) for index in indexes]
                 table[indexes[0], indexes[1]] = value
+        table = table.tolist()
         return table
 
     def decode(self, solutions):
@@ -239,7 +267,6 @@ class DAUSolver():
                 self._inequality_terms.append({
                     "terms" : term
                 })
-
         return self._binomial_matrix_terms, self._inequality_terms
 
 
@@ -271,14 +298,16 @@ class DAUSolver():
         self._delete_job(job_id)  
         # print(solution)
 
-        with open('solution.json', 'w') as f:
-            json.dump(solution, f, indent=4)
+        # with open('solution.json', 'w') as f:
+        #     json.dump(solution, f, indent=4)
 
         tables = self.decode(solution['qubo_solution']['solutions'])
-        print(tables[0])
-        table = pd.DataFrame(tables[0], dtype=int, columns=range(1, int(self.problem['days'])+1))
-        print(table)
-        self.evaluate(table)
+        # print(tables[0])
+        # table = pd.DataFrame(tables[0], dtype=int, columns=range(1, int(self.problem['days'])+1))
+        # print(table)
+        # self.evaluate(table)
+
+        return tables
 
     def evaluate(self, table):
         for i in range(len(self._binomial_constraints)):
@@ -286,15 +315,37 @@ class DAUSolver():
         for i in range(len(self._inequality_constraints)):
             print(self._inequality_constraints[i].evaluate(table))
 
+    def save_result(self, shifts):
+        data = {
+            "shift_id" : self._shift_id,
+            "shifts" : shifts,
+            "name_list" : self._namelist
+        }
+
+        db = db_client['test']
+        collection = db['shifts']
+        result = collection.insert_one(data)
+
+        # handle insertion result
+        if result.acknowledged:
+            print("Insertion successful")
+
+        return result.acknowledged
+    
+
 if __name__ == "__main__":
 
     with open("data.json", 'r') as f:
         data = json.load(f)
     # print(json.dumps(data, indent=4))
 
-    # with open('solution.json', 'r') as f:
-    #     solution = json.load(f)
+    with open('solution.json', 'r') as f:
+        solution = json.load(f)
 
     solver = DAUSolver(data)
     solver.compile()
-    solver.solve()
+    # solver.solve()
+
+    shifts = solver.decode(solution['qubo_solution']['solutions'])
+    # print(type(shifts[0][0]))
+    solver.save_result(shifts)

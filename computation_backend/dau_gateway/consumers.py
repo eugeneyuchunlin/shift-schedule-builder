@@ -2,7 +2,7 @@ import json
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .tasks import add
+from .tasks import solve_nsp
 
 from computation_backend.celery import app
 
@@ -23,15 +23,14 @@ class TaskConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print(json.dumps(data, indent=4))
+        # print(json.dumps(data, indent=4))
         with open("data.json", "w") as outfile:
             json.dump(data, outfile, indent=4)
-            
+
         await self.channel_layer.group_send(
-            self.task_group_name, {'type': 'chat.message', 'message' : 'received'}
+            self.task_group_name, {'type': 'chat.message', 'message' : 'Received'}
         )
-        # app.send_task('add', args=[1, 2], kwargs={})
-        add.delay(1, 2, self.task_group_name) 
+        solve_nsp.delay(data, self.task_group_name) 
         
 
         

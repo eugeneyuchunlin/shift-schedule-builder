@@ -14,28 +14,64 @@ export default function ShiftView({ props }: { props: ShiftConfig }) {
 
     useEffect(() => {
         // TODO: load shift content from the database
-
-
-        // if failed to load shift content, initialize content
-        const new_content = {} as ShiftContent;
-        new_content.shift_name = props.name;
-        new_content.shift_id = props.shift_id;
-        new_content.days = props.days;
-        new_content.number_of_workers = props.number_of_workers;
-        new_content.content = [] as PersonalShiftContent[];
-
-
-        for (let i = new_content.content.length; i < props.number_of_workers; i++) {
-            new_content.content.push({ name: "name " + (i + 1), shift_array: [] as string[] });
-        }
-
-        for (let i = 0; i < new_content.content.length; i++) {
-            for (let j = new_content.content[i].shift_array.length; j < props.days; j++) {
-                new_content.content[i].shift_array.push("1");
+        
+        fetch('/dashboard/api/shifts/load?shift_id=' + props.shift_id , {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
             }
-        }
+        }).then(response => {
+            if (response.ok) {
+                return response.json()
+            } else {
+                throw new Error("Failed to load shift content")
+            }
+        }).then(data => {
+            const new_content = {} as ShiftContent;
+            new_content.shift_name = props.name;
+            new_content.shift_id = props.shift_id;
+            new_content.days = props.days;
+            new_content.number_of_workers = props.number_of_workers;
+            new_content.content = [] as PersonalShiftContent[];
+            if (data){
+                
+                const shift0 = data.shifts[0];
+                console.log(shift0)
+                for (let i = 0; i < shift0.length; i++) {
+                    new_content.content.push(
+                        {
+                            name: data["name_list"][i],
+                            shift_array: shift0[i]
+                        }
+                    )
+                }
 
-        setShiftContent(new_content);
+                if(!new_content.days){
+                    new_content.days = shift0[0].length; 
+                    console.log(new_content.days)            
+                }
+
+                if(!new_content.number_of_workers){
+                    new_content.number_of_workers = data["name_list"].length;
+                }
+            } 
+            
+
+            for (let i = new_content.content.length; i < props.number_of_workers; i++) {
+                new_content.content.push({ name: "name " + (i + 1), shift_array: [] as string[] });
+            }
+
+            for (let i = 0; i < new_content.content.length; i++) {
+                for (let j = new_content.content[i].shift_array.length; j < props.days; j++) {
+                    new_content.content[i].shift_array.push("1");
+                }
+            }
+
+            setShiftContent(new_content);
+            console.log(new_content)
+        }).catch(error => {
+            console.log(error)
+        })
         // console.log("new content: ", new_content)
     }, [props.shift_id, props.number_of_workers, props.days])
 

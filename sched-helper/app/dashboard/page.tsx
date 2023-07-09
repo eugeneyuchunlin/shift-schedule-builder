@@ -62,7 +62,7 @@ export default function Page() {
             <Container fluid id={styles.main_container}>
                 <Row id={styles.main_view}>
                     <Col sm={8}>
-                        <ShiftView props={shiftConfig}/>
+                        <ShiftView props={shiftConfig} onSettingShiftConfig={handleShiftConfigChange}/>
                     </Col>
                     <Col>
                         <ShiftConfiguration 

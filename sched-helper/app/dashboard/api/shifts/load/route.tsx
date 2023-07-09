@@ -12,7 +12,7 @@ export async function GET(request: Request){
         const collection = await db.collection('shifts');
 
         const result = await collection.findOne({shift_id: shift_id});
-        // console.log(result)
+        console.log("load")
         return NextResponse.json(result);
     }catch(err){
         console.log(err);

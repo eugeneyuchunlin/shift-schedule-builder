@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.22.5",
+    "@ramonak/react-progress-bar": "^5.0.3",
     "@types/node": "20.3.3",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
@@ -22,6 +23,7 @@
     "react": "18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-bootstrap-sidebar-menu": "^2.0.3",
+    "react-circular-progressbar": "^2.1.0",
     "react-dom": "18.2.0",
     "typescript": "5.1.6",
     "uuid": "^9.0.0",

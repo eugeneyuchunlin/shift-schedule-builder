@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './banner.module.css'
 import {Container, Row, Col, Navbar, Nav} from 'react-bootstrap'
@@ -7,6 +7,9 @@ import { ShiftConfig } from '../../shift_config_def'
 import { ShiftContent } from '../shift/shift'
 
 export default function Banner({props, shift_content} : {props: ShiftConfig, shift_content: ShiftContent}) {
+
+    const [ running, setRunning ] = useState(false);
+    const [ status, setStatus ] = useState("");
 
     const taskSocketRef = useRef<WebSocket | null>(null);
     useEffect(()=> {
@@ -27,7 +30,15 @@ export default function Banner({props, shift_content} : {props: ShiftConfig, shi
 
         taskSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
-            console.log(data);
+            if (data.message){
+                setStatus(data.message)
+            }
+
+            if (data.message === "Saved"){
+                setTimeout(()=>{
+                    setRunning(false);
+                }, 1000)
+            }
         }
 
         return () => {
@@ -37,6 +48,7 @@ export default function Banner({props, shift_content} : {props: ShiftConfig, shi
 
     const handleRun = () => {
         console.log("Run");
+        setRunning(true);
         // prepare the data
         const data = {
             shift_id: props.shift_id,
@@ -59,7 +71,19 @@ export default function Banner({props, shift_content} : {props: ShiftConfig, shi
                     <Navbar.Brand>
                         {props.name}
                     </Navbar.Brand>
-                    <Col sm={7}></Col>
+                    { running ? <>
+                    <Col sm={5}>
+                         {/* <ProgressBar totalDuration={1000} completed={completed} /> */}
+                     </Col>
+                     <Col sm={2}>
+                            Status : {status}
+                     </Col>
+                    </> : <>
+
+                        <Col sm={7}></Col>
+                     
+                    </>}
+                    
                     <Col>
                         <Image className={styles.icon} src="/run.svg" width={30} height={30} alt="run" onClick={handleRun}></Image>
                     </Col>

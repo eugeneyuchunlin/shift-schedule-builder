@@ -283,8 +283,8 @@ class MinimumNDaysLeaveWithin7DaysInequalities(MinimumNDaysLeaveWithin7Days):
 
 class Consecutive2DaysLeaves(ConstraintFunction):
     
-    def __init__(self, X):
-        super().__init__(X)
+    def __init__(self, X, **kwargs):
+        super().__init__(X, **kwargs)
         
     def hamiltonian(self):
         row, col = self._X.shape
@@ -330,7 +330,7 @@ CONSTRAINTS = {
         "type" : "binomial_polynomial",
         "function" : SuccessiveShiftPair
     },
-    'consecutive_2days_leave' : {
+    'consecutive_2_days_leave' : {
         "type" : "binomial_polynomial",
         "function" : Consecutive2DaysLeaves
     },

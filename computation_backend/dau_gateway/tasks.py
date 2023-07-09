@@ -20,14 +20,18 @@ def add(x, y, task_group_name):
 @shared_task
 def solve_nsp(data, task_group_name):
     solver = MockSolver(data) 
+
+    time.sleep(1)
     async_to_sync(channel_layer.group_send)(
         task_group_name, {'type': 'chat.message', 'message' : 'Compile'}
     )
     solver.compile()
+    time.sleep(1)
     async_to_sync(channel_layer.group_send)(
         task_group_name, {'type': 'chat.message', 'message' : 'Solve'}
     )
     shfit_tables = solver.solve()
+    time.sleep(1)
     async_to_sync(channel_layer.group_send)(
         task_group_name, {'type': 'chat.message', 'message' : 'Done'}
     )
@@ -38,6 +42,7 @@ def solve_nsp(data, task_group_name):
     else:
         message = "Failed to save"
 
+    time.sleep(1)
     async_to_sync(channel_layer.group_send)(
         task_group_name, {'type': 'chat.message', 'message' : message}
     )

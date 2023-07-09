@@ -6,7 +6,6 @@ import Banner from './banner'
 import Shift, { ShiftContent, PersonalShiftContent } from './shift'
 import styles from './shift_view.module.css'
 import { ShiftConfig } from '../../shift_config_def'
-import { set } from 'zod'
 
 
 export default function ShiftView({ props }: { props: ShiftConfig }) {

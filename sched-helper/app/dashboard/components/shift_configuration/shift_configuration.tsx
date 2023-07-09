@@ -54,7 +54,7 @@ export default function ShiftConfiguration({ onShiftConfigChange, onAddingShiftC
 
                             <Col>
                                 <FloatingLabel controlId="floatingInputGrid" label="Computation Time(sec)">
-                                    <Form.Control aria-describedby="basic-addon2" placeholder='Computation Time(sec)' />
+                                    <Form.Control type="number" aria-describedby="basic-addon2" placeholder='Computation Time(sec)' onChange={handleComputationTimeChange}/>
                                 </FloatingLabel>
                             </Col>
                         </Row>

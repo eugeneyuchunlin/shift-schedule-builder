@@ -1,11 +1,7 @@
-interface Parameter{
-    parameter_name: string;
-    parameter_value: number;
-}
 
 export interface Constraint{
     name : string;
-    parameters: Parameter[];
+    parameters: {};
 }
 
 export interface ShiftConfig {

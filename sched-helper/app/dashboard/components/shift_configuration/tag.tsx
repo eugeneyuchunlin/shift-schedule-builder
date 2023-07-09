@@ -34,11 +34,7 @@ export default function Tag({
     const handleAdd = () => {
         handleClose();
         action();
-        const parameters = Object.entries(formValues).map(([key, value]) => ({
-            parameter_name: key,
-            parameter_value: Number(value),
-        }));
-        onAddingShiftConstraint({ name: props.key, parameters: parameters });
+        onAddingShiftConstraint({ name: props.key, parameters: formValues });
         setFormValues({})
     };
 
@@ -72,8 +68,8 @@ export default function Tag({
                                 <Form.Label column sm="6">{parameter.parameter_name}</Form.Label>
                                 <Col sm="6">
                                     <Form.Control
-                                        type="text"
-                                        name={parameter.parameter_name}
+                                        type="number"
+                                        name={parameter.parameter_alias}
                                         onChange={handleInputChange}
                                     />
                                 </Col>
@@ -83,7 +79,7 @@ export default function Tag({
                             <Form.Label column sm="6">Weight</Form.Label>
                             <Col sm="6">
                                 <Form.Control
-                                    type="text"
+                                    type="number"
                                     name="weight"
                                     onChange={handleInputChange}
                                 />

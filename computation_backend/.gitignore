@@ -33,4 +33,5 @@ database.sqlite3
 
 # Ignore specific files
 filename.txt
-
+config.yml
+dau_gateway/*.json

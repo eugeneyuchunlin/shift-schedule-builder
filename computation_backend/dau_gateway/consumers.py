@@ -1,16 +1,42 @@
 import json
 
-from channels.generic.websocket import WebsocketConsumer
+from asgiref.sync import async_to_sync
+from channels.generic.websocket import AsyncWebsocketConsumer
+from .tasks import add
 
-class TaskConsumer(WebsocketConsumer):
+from computation_backend.celery import app
 
-    def connect(self):
-        self.accept()
+class TaskConsumer(AsyncWebsocketConsumer):
 
-    def disconnect(self, close_code):
-        pass
+    async def connect(self):
+        self.task_id = self.scope['url_route']['kwargs']['task_id']
+        self.task_group_name = 'task_%s' % self.task_id
 
-    def receive(self, text_data):
-        print(text_data)
+        await self.channel_layer.group_add(
+            self.task_group_name, self.channel_name
+        )
 
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(self.task_group_name, self.channel_name)
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        print(json.dumps(data, indent=4))
+        with open("data.json", "w") as outfile:
+            json.dump(data, outfile, indent=4)
+            
+        await self.channel_layer.group_send(
+            self.task_group_name, {'type': 'chat.message', 'message' : 'received'}
+        )
+        # app.send_task('add', args=[1, 2], kwargs={})
+        add.delay(1, 2, self.task_group_name) 
+        
+
+        
+
+    async def chat_message(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps({'message': message}))
         pass

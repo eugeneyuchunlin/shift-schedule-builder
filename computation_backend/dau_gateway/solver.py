@@ -324,14 +324,35 @@ class DAUSolver():
 
         db = db_client['test']
         collection = db['shifts']
-        result = collection.insert_one(data)
+        # insert or update
+        existed_document = collection.find_one({"shift_id" : self._shift_id})
+        if existed_document:
+            result = collection.update_one(
+                {"shift_id" : self._shift_id},
+                {"$set" : data}
+            )
+        else: 
+            result = collection.insert_one(data)
 
         # handle insertion result
         if result.acknowledged:
             print("Insertion successful")
 
         return result.acknowledged
+
+class MockSolver(DAUSolver):
+
+    def __init__(self, problem):
+        super().__init__(problem)
+
+    def solve(self):
+        time.sleep(self._computation_time)
+        with open('solution.json', 'r') as f:
+            solution = json.load(f)
+        
+        tables = self.decode(solution['qubo_solution']['solutions'])
     
+        return tables
 
 if __name__ == "__main__":
 

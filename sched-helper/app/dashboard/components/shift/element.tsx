@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './element.module.css';
 
 type ElementProps = {
@@ -10,7 +10,12 @@ type ElementProps = {
 }
 
 export default function Element({name, val, col, onChangeElement, className }: ElementProps) {
+
   const [inputValue, setInputValue] = useState(val);
+  useEffect(() => {
+    setInputValue(val);
+  }, [val])
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

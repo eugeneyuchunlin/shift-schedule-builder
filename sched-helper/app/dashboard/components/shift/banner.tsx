@@ -5,11 +5,13 @@ import styles from './banner.module.css'
 import {Container, Row, Col, Navbar, Nav} from 'react-bootstrap'
 import { ShiftConfig } from '../../shift_config_def'
 import { ShiftContent } from '../shift/shift'
+import AlertBlock from '../alert/alert'
 
 export default function Banner({props, shift_content} : {props: ShiftConfig, shift_content: ShiftContent}) {
 
     const [ running, setRunning ] = useState(false);
     const [ status, setStatus ] = useState("");
+    const [ showAlert, setShowAlert ] = useState(false);
 
     const taskSocketRef = useRef<WebSocket | null>(null);
     useEffect(()=> {
@@ -47,20 +49,43 @@ export default function Banner({props, shift_content} : {props: ShiftConfig, shi
     }, [props.shift_id]) 
 
     const handleRun = () => {
-        console.log("Run");
-        setRunning(true);
-        // prepare the data
-        const data = {
-            shift_id: props.shift_id,
-            number_of_workers: props.number_of_workers,
-            days: props.days,
-            computation_time: props.computation_time,
-            constraints: props.constraints,
-            content: shift_content.content,
+        // check if data is valid
+        let valid = true;
+        if (!props.number_of_workers || props.number_of_workers <= 0){
+            valid = false;
         }
-        if(taskSocketRef.current) {
-            taskSocketRef.current.send(JSON.stringify(data));
+
+        if(!props.days || props.days <= 0){
+            valid = false;
         }
+
+        if(!props.computation_time || props.computation_time <= 0){
+            valid = false;
+        }
+
+        if(!props.constraints || props.constraints.length === 0){
+            valid = false;
+        }
+
+        if(valid){
+            setRunning(true);
+            // prepare the data
+            const data = {
+                shift_id: props.shift_id,
+                number_of_workers: props.number_of_workers,
+                days: props.days,
+                computation_time: props.computation_time,
+                constraints: props.constraints,
+                content: shift_content.content,
+            }
+            if(taskSocketRef.current) {
+                taskSocketRef.current.send(JSON.stringify(data));
+            }
+        }else{
+            console.log("show alert")
+            setShowAlert(true);
+        }
+        
     }
 
 
@@ -101,6 +126,8 @@ export default function Banner({props, shift_content} : {props: ShiftConfig, shi
                     </Col>
                 </Container>
             </Navbar> 
+
+            <AlertBlock show={showAlert} handleClose={()=>{setShowAlert(false)}} />
         </>
     )
 }

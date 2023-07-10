@@ -40,7 +40,7 @@ class ConstraintFunction(object):
     def weighted_hamiltonian(self) -> Model:
         return self._weight * self.hamiltonian()
     
-    def evaluate(self, table):
+    def evaluate(self, table) -> dict:
         pass
 
 
@@ -66,12 +66,18 @@ class ExpectedWorkingDays(ConstraintFunction):
         failed_rates = []
         for r in range(rows):
             diff = self._expected_working_days - sum(content[r])
-            if (diff != 0):
-                print("Worker %d failed => %d" % (r, diff))
+            # if (diff != 0):
+            #     print("Worker %d failed => %d" % (r, diff))
             failed_rates.append(abs(diff) / self._expected_working_days)
          
         
-        return np.average(failed_rates), np.std(failed_rates)
+        return 1 - np.average(failed_rates)
+
+    def __str__(self):
+        return "Expected Number of Working Days"
+    
+    def __repr__(self):
+        return "Expected Number of Working Days"
     
 class ExpectedNumberOfWorkersInEachShift(ConstraintFunction):
     
@@ -93,16 +99,19 @@ class ExpectedNumberOfWorkersInEachShift(ConstraintFunction):
         return H
     
     def evaluate(self, table):
-        print("Evaluate on expected number of workers on each shift")
+        # print("Evaluate on expected number of workers on each shift")
         failed = 0
         for i in table.columns:
             _sum = table[i].sum()
-            if _sum < self._expected_workers:
+            if _sum != self._expected_workers:
                 failed += 1
-                print("\tdate[%d] Failed" % (i))
+                # print("\tdate[%d] Failed" % (i))
         correct_rate = failed / len(table.columns)
         
         return 1 - correct_rate
+    
+    def __str__(self):
+        return "Expected Number of Workers per Shift"
     
 class MaximumConsecutiveShifts(ConstraintFunction):
     
@@ -142,7 +151,7 @@ class MaximumConsecutiveShifts(ConstraintFunction):
         return H
     
     def evaluate(self, table):
-        print("Evaluate on the limit of max consecutive shifts:")
+        # print("Evaluate on the limit of max consecutive shifts:")
         content = table.values
         row, col = content.shape
         failed = 0
@@ -155,6 +164,12 @@ class MaximumConsecutiveShifts(ConstraintFunction):
         correctness_rate = 1 - (failed / (row*(col - self._max_consecutive_day)))
         
         return correctness_rate
+    
+    def __str__(self):
+        return "Maximum Consecutive Working Days"
+    
+    def __repr__(self):
+        return "Maximum Consecutive Working Days"
 
 class MaximumConsecutiveShiftsInequalities(MaximumConsecutiveShifts):
     
@@ -181,6 +196,12 @@ class MaximumConsecutiveShiftsInequalities(MaximumConsecutiveShifts):
                 terms.append(term)
             
         return terms
+    
+    def __str__(self):
+        return super().__str__()
+    
+    def __repr__(self):
+        return super().__repr__()
 
     
 class SuccessiveShiftPair(ConstraintFunction):
@@ -212,7 +233,13 @@ class SuccessiveShiftPair(ConstraintFunction):
         possible_outcomes = row * col
         
         return 1 - (failed / possible_outcomes)
-    
+
+    def __str__(self):
+        return "Successive Shift Pair"
+
+    def __repr__(self):
+        return "Successive Shift Pair"
+
 
 class MinimumNDaysLeaveWithin7Days(ConstraintFunction):
     
@@ -257,7 +284,13 @@ class MinimumNDaysLeaveWithin7Days(ConstraintFunction):
                     if sum(content[r][i:]) > 5:
                         failed += 1
         return 1 - (failed / (len(self._weekend)*rows))
+
+    def __str__(self):
+        return "Minimum N Days Leave Within 7 Days"
     
+    def __repr__(self):
+        return "Minimum N Days Leave Within 7 Days"
+
 class MinimumNDaysLeaveWithin7DaysInequalities(MinimumNDaysLeaveWithin7Days):
     
     def __init__(self, X:Array, **kwargs):
@@ -280,6 +313,13 @@ class MinimumNDaysLeaveWithin7DaysInequalities(MinimumNDaysLeaveWithin7Days):
             terms.append(convert_hamiltonian_to_binary_polynomial_term(hamiltonians[i], variables))
             
         return terms
+
+    def __str__(self):
+        return super().__str__()
+    
+    def __repr__(self):
+        return super().__repr__()
+
 
 class Consecutive2DaysLeaves(ConstraintFunction):
     
@@ -315,7 +355,102 @@ class Consecutive2DaysLeaves(ConstraintFunction):
             all_consecutive_2days_leave += len(consecutive_days_off)
             
         return (all_consecutive_2days_leave / all_leaves)
+
+    def __str__(self):
+        return "Consecutive 2 Days Leave"
+
+    def __repr__(self):
+        return "Consecutive 2 Days Leave"
+
+class NoConsecutive2DaysOff(ConstraintFunction):
     
+    def __init__(self, X, **kwargs):
+        super().__init__(X, **kwargs)
+        
+    def hamiltonian(self):
+        number_of_workers, days = self._X.shape
+        H = Num(0)
+        for i in range(number_of_workers):
+            for j in range(days - 1):
+                H += ((1-self._X[i][j])*(1-self._X[i][j+1]))
+            
+        return H
+    
+    
+    def evaluate(self, table):
+        content = table.values
+        number_of_workers, days = content.shape
+        
+        number_of_days_off = 0
+        failed = 0
+        for i in range(number_of_workers):
+            for j in range(days-1):
+                if content[i][j] == 0:
+                    number_of_days_off += 1
+                
+                if content[i][j] == 0 and content[i][j+1] == 0:
+                    failed += 1
+        
+        return 1 - failed / number_of_days_off
+
+    def __str__(self):
+        return "No Consecutive 2 Days Off"
+        
+    def __repr__(self):
+        return "No Consecutive 2 Days Off"
+
+class PreferenceDayOff(ConstraintFunction):
+    
+    def __init__(self, X, **kwargs):
+        """
+        The initialization function of the class PreferenceDayOff
+        
+        The days_off_config should be in the following structure
+        {
+            ...
+            
+            i : [1, 2, 3 ... 31]
+        }
+        
+        For example, the user want to set [0, 1, 2] three consecutive days off to worker 0,
+        it can be achieved by passed
+        {
+            0 : [0, 1 2]
+        }
+        """
+        super().__init__(X, **kwargs)
+
+
+        self._days_off_config = kwargs['days_off_index']
+        
+    def hamiltonian(self):
+        hamiltonian = Num(0)
+        for key, array in self._days_off_config.items():
+            for i in range(len(array)):
+                date = array[i]
+                hamiltonian += self._X[key][date]
+        
+        return hamiltonian
+    
+    def evaluate(self, table):
+        # print("Prefered Days Off evaluation")
+        all_settings = 0
+        failed = 0
+        for key, array in self._days_off_config.items():
+            for i in range(len(array)):
+                date = array[i]
+                if table.values[key][date] == 1:
+                    print(f"\tWorker[{key}] has to work on date {date}")
+                    failed += 1
+                all_settings += 1
+                
+        return 1 - (failed / all_settings)    
+
+    def __str__(self):
+        return "Customize Leave"
+    
+    def __repr__(self):
+        return "Customize Leave"
 
 CONSTRAINTS = {
     'expected_working_days' : {
@@ -333,6 +468,14 @@ CONSTRAINTS = {
     'consecutive_2_days_leave' : {
         "type" : "binomial_polynomial",
         "function" : Consecutive2DaysLeaves
+    },
+    'no_consecutive_leave' : {
+        "type" : "binomial_polynomial",
+        "function" : NoConsecutive2DaysOff
+    },
+    'customize_leave' : {
+        "type" : "binomial_polynomial",
+        "function" : PreferenceDayOff
     },
     'minimum_n_days_leave_within_7_days' : {
         "type" : "inequalities",

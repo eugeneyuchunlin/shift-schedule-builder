@@ -4,6 +4,7 @@ import requests
 import re
 import numpy as np
 import pandas as pd
+from copy import deepcopy
 from pyqubo import Array, Num
 
 try:
@@ -51,6 +52,7 @@ class DAUSolver():
 
     def __init__(self, problem):
         self.problem = problem
+        self._constraints = deepcopy(problem['constraints'])
         self._number_of_workers = int(problem['number_of_workers'])
         self._days = int(problem['days'])
         self._computation_time = int(problem['computation_time'])
@@ -60,12 +62,30 @@ class DAUSolver():
 
         constraints = problem['constraints']
 
+        # shift_content would be a dict and which is mutable
+        # so we don't have to worry about the redundant data
+        # but we still have to minimize the content
+        # only the days-off's index would be passed to the constraint function
+        days_off_index = {}
+        for i in range(len(problem['content'])):
+            days_off_index[i] = []
+            shift_array = problem['content'][i]['shift_array']
+            for j in range(len(shift_array)):
+                if shift_array[j] == '0':
+                    days_off_index[i].append(j)
+
+        self._days_off_index = days_off_index
+
+        for i in range(len(constraints)):
+            constraints[i]['parameters']['days_off_index'] = days_off_index
+
         self._binomial_constraints = []
         self._inequality_constraints = []
 
         for i in range(len(constraints)):
             name = constraints[i]['name']
-            print(constraints[i]['parameters'])
+            # print(name)
+            # print(constraints[i]['parameters'])
             if CONSTRAINTS[name]['type'] == 'binomial_polynomial':
                 self._binomial_constraints.append(
                     CONSTRAINTS[name]['function'](self._X, **constraints[i]['parameters'])
@@ -79,7 +99,7 @@ class DAUSolver():
         self._namelist = []
         for i in range(len(content)):
             self._namelist.append(content[i]['name'])
-        print(self._namelist)
+        # print(self._namelist)
 
     def _get_matrix_term(self, matrix_element:dict, variables:list) -> list:
         """Get the matrix term from the qubo and variables
@@ -298,8 +318,8 @@ class DAUSolver():
         self._delete_job(job_id)  
         # print(solution)
 
-        # with open('solution.json', 'w') as f:
-        #     json.dump(solution, f, indent=4)
+        with open('solution.json', 'w') as f:
+            json.dump(solution, f, indent=4)
 
         tables = self.decode(solution['qubo_solution']['solutions'])
         # print(tables[0])
@@ -310,16 +330,48 @@ class DAUSolver():
         return tables
 
     def evaluate(self, table):
-        for i in range(len(self._binomial_constraints)):
-            print(self._binomial_constraints[i].evaluate(table))
-        for i in range(len(self._inequality_constraints)):
-            print(self._inequality_constraints[i].evaluate(table))
+        _table = pd.DataFrame(table)
+        scores = {}
+        overall_score = 0
 
-    def save_result(self, shifts):
+        for i in range(len(self._binomial_constraints)):
+            constraint = self._binomial_constraints[i]
+            score = constraint.evaluate(_table)
+            scores[constraint.__str__()] = score
+            overall_score += score
+
+            # print(constraint, ":",  score)
+        for i in range(len(self._inequality_constraints)):
+            constraint = self._inequality_constraints[i]
+            # print(constraint, ":",  constraint.evaluate(_table))
+            score = constraint.evaluate(_table)
+            scores[constraint.__str__()] = score
+            overall_score += score
+
+        overall_score /= (len(self._binomial_constraints) + len(self._inequality_constraints))
+        scores['overall_score'] = overall_score
+        return scores
+    
+    def evaluates_all(self, tables):
+        scores = []
+        for i in range(len(tables)):
+            scores.append(self.evaluate(tables[i]))
+        return scores
+
+
+    def save_result(self, shifts, scores):
+        days_off_index = {}
+        for key, value in self._days_off_index.items():
+            days_off_index[str(key)] = value
+
         data = {
             "shift_id" : self._shift_id,
             "shifts" : shifts,
-            "name_list" : self._namelist
+            "scores" : scores,
+            "name_list" : self._namelist,
+            "constraints": self._constraints,
+            "compute_time" : self._computation_time,
+            "days_off_index" : days_off_index
         }
 
         db = db_client['test']
@@ -337,7 +389,6 @@ class DAUSolver():
         # handle insertion result
         if result.acknowledged:
             print("Insertion successful")
-
         return result.acknowledged
 
 class MockSolver(DAUSolver):
@@ -365,8 +416,12 @@ if __name__ == "__main__":
 
     solver = DAUSolver(data)
     solver.compile()
-    # solver.solve()
-
+    # solution = solver.solve()
     shifts = solver.decode(solution['qubo_solution']['solutions'])
+    # print(shifts[0])
+    # pd.DataFrame(shifts[0], dtype=int, columns=range(1, int(data['days'])+1)).to_csv('shift.csv', index=False)
     # print(type(shifts[0][0]))
-    solver.save_result(shifts)
+    # solver.save_result(shifts)
+
+    scores = solver.evaluates_all(shifts)
+    solver.save_result(shifts, scores)

@@ -13,7 +13,7 @@ export interface TagProps{
 
 export const TagsDefinition : TagProps[] = [
     {
-        text: 'Expected working days',
+        text: 'Expected number of working days',
         key: 'expected_working_days',
         description: `The number of working days that the employee is expected to work in a month`,
         parameters: [
@@ -78,6 +78,12 @@ export const TagsDefinition : TagProps[] = [
         description: `The number of consecutive 2 days leave that the employee is expected to take`,
         parameters: []
     },
+    {
+        text: 'No leave on consecutive working days',
+        key: 'no_consecutive_leave',
+        description: `The employee is not allowed to take leave on consecutive working days`,
+        parameters: []
+    }
     
 ]
 

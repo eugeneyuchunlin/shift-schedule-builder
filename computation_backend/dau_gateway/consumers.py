@@ -25,7 +25,7 @@ class TaskConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         # print(json.dumps(data, indent=4))
         with open("data.json", "w") as outfile:
-            json.dump(data, outfile, indent=4)
+            json.dump(data, outfile, indent=4, ensure_ascii=False)
 
         await self.channel_layer.group_send(
             self.task_group_name, {'type': 'chat.message', 'message' : 'Received'}

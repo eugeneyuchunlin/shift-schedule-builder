@@ -35,8 +35,9 @@ def solve_nsp(data, task_group_name):
     async_to_sync(channel_layer.group_send)(
         task_group_name, {'type': 'chat.message', 'message' : 'Done'}
     )
+    scores = solver.evaluates_all(shfit_tables)
 
-    saved_result = solver.save_result(shfit_tables)
+    saved_result = solver.save_result(shfit_tables, scores)
     if saved_result:
         message = "Saved"
     else:

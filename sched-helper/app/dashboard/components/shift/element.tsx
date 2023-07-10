@@ -12,6 +12,7 @@ type ElementProps = {
 
 export default function Element({ name, val, col, reset, onChangeElement, className }: ElementProps) {
   const [inputValue, setInputValue] = useState(val);
+  const [ preRest, setPreRest ] = useState(false); // customize leave
 
   useEffect(() => {
     if (reset){
@@ -23,17 +24,32 @@ export default function Element({ name, val, col, reset, onChangeElement, classN
     const newValue = e.target.value;
     setInputValue(newValue);
     onChangeElement(name, col, newValue);
+
+    if (newValue === '0'){
+      console.log("edit to 0")
+      setPreRest(true);
+    }
   };
 
 
   return (
     <td className={className}>
+    { preRest ? 
       <input
-        className={styles.element}
-        type="text"
-        value={inputValue}
-        onChange={handleChange}
-      />
+      className={`${styles.element} ${styles.element_prerest}`}
+      type="text"
+      value={inputValue}
+      onChange={handleChange}
+      /> 
+    : 
+    <input
+      className={styles.element}
+      type="text"
+      value={inputValue}
+      onChange={handleChange}
+    />
+  }
+      
     </td>
   );
 }

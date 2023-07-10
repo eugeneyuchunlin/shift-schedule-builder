@@ -6,6 +6,10 @@
     border-radius: 5px;
 }
 
+.element_prerest{
+    background-color: rgb(173, 212, 247);
+}
+
 .element:focus{
     background-color: rgb(237, 234, 234);
 }

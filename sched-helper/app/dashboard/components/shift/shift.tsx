@@ -3,7 +3,6 @@ import Element from './element';
 import { ShiftConfig } from '../../shift_config_def';
 import { useEffect, useState } from 'react';
 import styles from './shift.module.css';
-
 export interface PersonalShiftContent {
   name: string;
   shift_array: string[];
@@ -18,19 +17,13 @@ export interface ShiftContent {
 }
 
 interface ShiftProps {
+  reset: boolean;
   props: ShiftConfig;
   content: ShiftContent;
   updateShiftContentElement: (name: string, col: number, val: string) => void;
 }
 
-export default function Shift({ props, content, updateShiftContentElement }: ShiftProps) {
-  const numberOfWorkers = content.number_of_workers || 0;
-  const days = content.days || 0;
-
-  useEffect(() => {
-    // Update local state here if needed
-    console.log(content)
-  }, [content]);
+export default function Shift({reset, props, content, updateShiftContentElement }: ShiftProps) {
 
   return (
     <Container fluid>
@@ -39,14 +32,14 @@ export default function Shift({ props, content, updateShiftContentElement }: Shi
           <Table responsive>
             <thead>
               <tr>
-                {numberOfWorkers > 0 && <th className={styles.headcol}>Worker</th>}
-                {Array.from({ length: days }).map((_, index) => (
+                {content.number_of_workers> 0 && <th className={styles.headcol}>Worker</th>}
+                {Array.from({ length: content.days }).map((_, index) => (
                   <th key={index}>{index + 1}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: numberOfWorkers }).map((_, index) => {
+              {Array.from({ length: content.number_of_workers }).map((_, index) => {
                 const shiftArray = content.content[index]?.shift_array || [];
                 return (
                   <tr key={index}>
@@ -56,14 +49,16 @@ export default function Shift({ props, content, updateShiftContentElement }: Shi
                       key={index}
                       className={styles.headcol}
                       val={content.content[index].name}
+                      reset={reset}
                       onChangeElement={updateShiftContentElement}
                     />
-                    {Array.from({ length: days }).map((_, index2) => (
+                    {Array.from({ length: content.days }).map((_, index2) => (
                       <Element
                         name={content.content[index].name}
                         col={index2}
                         key={index2}
                         val={shiftArray[index2]}
+                        reset={reset}
                         onChangeElement={updateShiftContentElement}
                       />
                     ))}

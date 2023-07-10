@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row } from 'react-bootstrap';
+import { Container, OffcanvasBody, Row } from 'react-bootstrap';
 import Banner from './banner';
 import Shift, { ShiftContent } from './shift';
 import styles from './shift_view.module.css';
@@ -7,6 +7,8 @@ import { ShiftConfig } from '../../shift_config_def';
 
 export default function ShiftView({ props, onSettingShiftConfig }: { props: ShiftConfig, onSettingShiftConfig: (newConfig: any) => void }) {
     const [shiftContent, setShiftContent] = useState({} as ShiftContent);
+    const [reset, setReset] = useState(false);
+
 
     const loadShiftContent = async () => {
         try {
@@ -28,7 +30,7 @@ export default function ShiftView({ props, onSettingShiftConfig }: { props: Shif
                 };
 
                 if (data) {
-                    console.log(data)
+                    // console.log(data)
                     const shift0 = data.shifts[0];
 
                     newContent.number_of_workers = shift0.length;
@@ -64,11 +66,22 @@ export default function ShiftView({ props, onSettingShiftConfig }: { props: Shif
         }
     };
 
+    const reloadShiftContent = async () => {
+        const originalContent = await loadShiftContent();
+        setShiftContent(originalContent);
+        
+        setReset(true);
+        setTimeout(() => {
+            setReset(false);
+        }, 1000)
+    }
+
+
     useEffect(() => {
         if (shiftContent.shift_id !== props.shift_id) {
             loadShiftContent()
                 .then((newContent) => {
-                    console.log(newContent)
+                    // console.log(newContent)
                     setShiftContent(newContent);
                 })
                 .catch((error) => {
@@ -78,8 +91,8 @@ export default function ShiftView({ props, onSettingShiftConfig }: { props: Shif
     }, [props.shift_id]);
 
     useEffect(() => {
-        console.log("Number of workers: " + props.number_of_workers)
-        console.log("Days: " + props.days)
+        // console.log("Number of workers: " + props.number_of_workers)
+        // console.log("Days: " + props.days)
         const updatedContent = { ...shiftContent };
         updatedContent.number_of_workers = props.number_of_workers;
         updatedContent.days = props.days;
@@ -96,7 +109,6 @@ export default function ShiftView({ props, onSettingShiftConfig }: { props: Shif
             }
         }
         setShiftContent(updatedContent);
-        console.log(shiftContent)
         
     }, [props.number_of_workers, props.days]);
 
@@ -135,13 +147,18 @@ export default function ShiftView({ props, onSettingShiftConfig }: { props: Shif
             {props.shift_id ? (
                 <Container className={styles.shift_container} fluid>
                     <Row>
-                        <Banner props={props} shift_content={shiftContent} />
+                        <Banner 
+                            props={props} 
+                            shift_content={shiftContent} 
+                            reloadShiftContent={reloadShiftContent}
+                        />
                     </Row>
                     <Row>
                         <hr />
                     </Row>
                     <Row>
                         <Shift
+                            reset={reset}
                             props={props}
                             content={shiftContent}
                             updateShiftContentElement={updateShiftContentElement}

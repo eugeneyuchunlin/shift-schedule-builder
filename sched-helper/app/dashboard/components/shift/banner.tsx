@@ -7,7 +7,14 @@ import { ShiftConfig } from '../../shift_config_def'
 import { ShiftContent } from '../shift/shift'
 import AlertBlock from '../alert/alert'
 
-export default function Banner({props, shift_content} : {props: ShiftConfig, shift_content: ShiftContent}) {
+export default function Banner(
+    {props, shift_content, reloadShiftContent} : 
+    {
+        props: ShiftConfig, 
+        shift_content: ShiftContent
+        reloadShiftContent: () => void
+    }
+) {
 
     const [ running, setRunning ] = useState(false);
     const [ status, setStatus ] = useState("");
@@ -97,23 +104,21 @@ export default function Banner({props, shift_content} : {props: ShiftConfig, shi
                         {props.name}
                     </Navbar.Brand>
                     { running ? <>
-                    <Col sm={5}>
+                    <Col sm={4}>
                          {/* <ProgressBar totalDuration={1000} completed={completed} /> */}
                      </Col>
-                     <Col sm={2}>
+                     <Col sm={3}>
                             Status : {status}
                      </Col>
                     </> : <>
-
                         <Col sm={7}></Col>
-                     
                     </>}
                     
                     <Col>
                         <Image className={styles.icon} src="/run.svg" width={30} height={30} alt="run" onClick={handleRun}></Image>
                     </Col>
                     <Col>
-                        <Image className={styles.icon} src="/reset.svg" width={30} height={30} alt="reset"></Image>
+                        <Image className={styles.icon} src="/reset.svg" width={30} height={30} alt="reset" onClick={reloadShiftContent}></Image>
                     </Col>
                     <Col>
                         <Image className={styles.icon} src="/info.svg" width={30} height={30} alt="Info"></Image>

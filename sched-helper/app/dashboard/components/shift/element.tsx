@@ -2,25 +2,29 @@ import { useEffect, useState } from 'react';
 import styles from './element.module.css';
 
 type ElementProps = {
-    name: string;
-    val: string;
-    col: number;
-    onChangeElement: (name:string, col: number, val: string) => void
-    className?: string;
-}
+  name: string;
+  val: string;
+  col: number;
+  reset: boolean;
+  onChangeElement: (name: string, col: number, val: string) => void;
+  className?: string;
+};
 
-export default function Element({name, val, col, onChangeElement, className }: ElementProps) {
-
+export default function Element({ name, val, col, reset, onChangeElement, className }: ElementProps) {
   const [inputValue, setInputValue] = useState(val);
-  useEffect(() => {
-    setInputValue(val);
-  }, [val])
 
+  useEffect(() => {
+    if (reset){
+      setInputValue(val);
+    }
+  }, [reset, val]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    onChangeElement(name, col, e.target.value);
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    onChangeElement(name, col, newValue);
   };
+
 
   return (
     <td className={className}>

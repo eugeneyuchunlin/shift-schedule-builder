@@ -92,7 +92,7 @@ export default function Banner({props, shift_content} : {props: ShiftConfig, shi
     return (
         <>
             <Navbar>
-                <Container>
+                <Container fluid>
                     <Navbar.Brand>
                         {props.name}
                     </Navbar.Brand>

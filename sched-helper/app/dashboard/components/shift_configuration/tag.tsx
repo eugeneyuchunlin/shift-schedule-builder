@@ -1,29 +1,30 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './tag.module.css';
 import Image from 'next/image';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import { TagProps } from './tags_definition';
 import { Constraint } from '../../shift_config_def';
 
 export default function Tag({
     props,
-    plus,
-    action,
     onAddingShiftConstraint,
+    onRemovingShiftConstraint,
 }: {
     props: TagProps;
-    plus: boolean;
-    action: () => void;
     onAddingShiftConstraint: (constraint: Constraint) => void;
+    onRemovingShiftConstraint: (constraint_name: string) => void; 
 }) {
+    const [added, setAdded] = useState(false);
     const [show, setShow] = useState(false);
-    const [formValues, setFormValues] = useState({});
+    const [formValues, setFormValues] = useState<{ [name: string]: string }>({});
 
     const handleClick = () => {
-        if (plus) {
+        if (!added) {
             setShow(true);
         } else {
-            action();
+            onRemovingShiftConstraint(props.key);
+            setAdded(false);
+            setFormValues({});
         }
     };
 
@@ -33,9 +34,9 @@ export default function Tag({
 
     const handleAdd = () => {
         handleClose();
-        action();
         onAddingShiftConstraint({ name: props.key, parameters: formValues });
-        setFormValues({})
+        setAdded(true);
+        // setFormValues({});
     };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,16 +47,46 @@ export default function Tag({
         }));
     };
 
+    const tooltip = (
+        <Tooltip>
+          {Object.entries(formValues).length > 0 ? (
+            <span>
+              Parameters: <br />
+              {Object.entries(formValues).map(([key, value]) => (
+                <span key={key}>
+                  {key}: {value}
+                    <br />
+                </span> 
+              ))}
+            </span>
+          ) : (
+            <span>Click to set your parameters</span>
+          )}
+        </Tooltip>
+      );
+      
+
     return (
         <>
-            <div className={styles.tag} onClick={handleClick}>
-                <span onClick={() => { console.log("click") }} className={styles.text}>{props.text}</span>
-                <button className={styles.button}>
-                    {plus ? <Image src="/add.svg" width={10} height={10} alt="add" /> : <>&#x2715;</>}
-                </button>
-            </div>
+        <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={tooltip}>
+            {added ? (
+                <div className={`${styles.tag} ${styles.tag_chosen}`} onClick={handleClick}>
+                    <span className={styles.text}>{props.text}</span>
+                    <button className={styles.button}>
+                        <>&#x2715;</>
+                    </button>
+                </div>
+            ) : (
+                <div className={styles.tag} onClick={handleClick}>
+                    <span className={styles.text}>{props.text}</span>
+                    <button className={styles.button}>
+                        <Image src="/add.svg" width={10} height={10} alt="add" />
+                    </button>
+                </div>
+            )}
+        </OverlayTrigger>
 
-            <Modal show={show} size="lg" onHide={() => setShow(false)}>
+            <Modal show={show} size="lg" onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{props.text}</Modal.Title>
                 </Modal.Header>
@@ -65,7 +96,9 @@ export default function Tag({
                     <Form>
                         {props.parameters.map((parameter, index) => (
                             <Form.Group as={Row} className="mb-3" controlId={`form${index}`} key={index}>
-                                <Form.Label column sm="6">{parameter.parameter_name}</Form.Label>
+                                <Form.Label column sm="6">
+                                    {parameter.parameter_name}
+                                </Form.Label>
                                 <Col sm="6">
                                     <Form.Control
                                         type="number"
@@ -76,13 +109,11 @@ export default function Tag({
                             </Form.Group>
                         ))}
                         <Form.Group as={Row} className="mb-3" controlId={`form${props.parameters.length}`}>
-                            <Form.Label column sm="6">Weight</Form.Label>
+                            <Form.Label column sm="6">
+                                Weight
+                            </Form.Label>
                             <Col sm="6">
-                                <Form.Control
-                                    type="number"
-                                    name="weight"
-                                    onChange={handleInputChange}
-                                />
+                                <Form.Control type="number" name="weight" onChange={handleInputChange} />
                             </Col>
                         </Form.Group>
                     </Form>

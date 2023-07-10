@@ -7,6 +7,9 @@
     cursor: pointer;
 }
 
+.tag_chosen{
+    background-color: #ddd !important;
+}
 
 .tag {
     display: flex;

@@ -6,13 +6,15 @@ import {Container, Row, Col, Navbar, Tooltip, OverlayTrigger} from 'react-bootst
 import { ShiftConfig } from '../../shift_config_def'
 import { ShiftContent } from '../shift/shift'
 import AlertBlock from '../alert/alert'
+import { setDefaultHighWaterMark } from 'stream'
 
 export default function Banner(
-    {props, shift_content, reloadShiftContent} : 
+    {props, shift_content, reloadShiftContent, setDefaultShiftContent} : 
     {
         props: ShiftConfig, 
         shift_content: ShiftContent
         reloadShiftContent: () => void
+        setDefaultShiftContent: () => void
     }
 ) {
 
@@ -115,7 +117,7 @@ export default function Banner(
         {
             src: "/erase.svg",
             alt: "Reset",
-            onClick: ()=>{},
+            onClick: setDefaultShiftContent,
         },
         {
             src: "/info.svg",

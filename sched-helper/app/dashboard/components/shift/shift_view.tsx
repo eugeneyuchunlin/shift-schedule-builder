@@ -66,15 +66,32 @@ export default function ShiftView({ props, onSettingShiftConfig }: { props: Shif
         }
     };
 
-    const reloadShiftContent = async () => {
-        const originalContent = await loadShiftContent();
-        setShiftContent(originalContent);
-        
+    const resetShiftContennt = (newContent: ShiftContent) => {
+        setShiftContent(newContent);
         setReset(true);
         setTimeout(() => {
             setReset(false);
         }, 1000)
+    } 
+
+    const setDefaultShiftContent = async () => {
+        const newContent = await loadShiftContent();
+        for (let i = 0; i < newContent.content.length; i++) {
+            newContent.content[i].shift_array = [];
+            for (let j = 0; j < newContent.days; j++) {
+                newContent.content[i].shift_array.push("1");
+            }
+        }
+        console.log(newContent)
+        resetShiftContennt(newContent);
     }
+
+    const reloadShiftContent = async () => {
+        const originalContent = await loadShiftContent();
+        resetShiftContennt(originalContent);
+    }
+
+
 
 
     useEffect(() => {
@@ -151,6 +168,7 @@ export default function ShiftView({ props, onSettingShiftConfig }: { props: Shif
                             props={props} 
                             shift_content={shiftContent} 
                             reloadShiftContent={reloadShiftContent}
+                            setDefaultShiftContent={setDefaultShiftContent}
                         />
                     </Row>
                     <Row>

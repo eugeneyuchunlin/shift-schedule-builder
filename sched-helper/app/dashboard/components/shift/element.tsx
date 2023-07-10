@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styles from './element.module.css';
+import { set } from 'zod';
 
 type ElementProps = {
   name: string;
@@ -17,6 +18,7 @@ export default function Element({ name, val, col, reset, onChangeElement, classN
   useEffect(() => {
     if (reset){
       setInputValue(val);
+      setPreRest(false);
     }
   }, [reset, val]);
 

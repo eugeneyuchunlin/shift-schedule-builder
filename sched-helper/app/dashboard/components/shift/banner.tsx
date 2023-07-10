@@ -88,6 +88,7 @@ export default function Banner(
                 content: shift_content.content,
             }
             if(taskSocketRef.current) {
+                console.log(data)
                 taskSocketRef.current.send(JSON.stringify(data));
             }
         }else{

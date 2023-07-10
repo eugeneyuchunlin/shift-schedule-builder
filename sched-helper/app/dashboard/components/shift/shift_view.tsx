@@ -131,33 +131,16 @@ export default function ShiftView({ props, onSettingShiftConfig }: { props: Shif
 
 
     const updateShiftContentElement = (name: string, col: number, val: string) => {
-        if (Object.keys(shiftContent).length == 0) {
-            const newContent: ShiftContent = {
-                ...shiftContent,
-                content: shiftContent.content.map((element) => {
-                    if (element.name === name) {
-                        const updatedShiftArray = [...element.shift_array];
-                        if (col < 0) {
-                            // Update name
-                            return {
-                                ...element,
-                                name: val,
-                            };
-                        } else if (col < updatedShiftArray.length) {
-                            // Update shift array value
-                            updatedShiftArray[col] = val;
-                            return {
-                                ...element,
-                                shift_array: updatedShiftArray,
-                            };
-                        }
-                    }
-                    return element;
-                }),
-            };
-            setShiftContent(newContent);
+        const new_content = { ...shiftContent };
+        const index = new_content.content.findIndex((element) => element.name === name);
+
+        if (col < 0){
+            new_content.content[index].name = val;
+        }else{
+            new_content.content[index].shift_array[col] = val;
         }
-    };
+        setShiftContent(new_content); // TODO: should store in a copy
+    }
 
     return (
         <>

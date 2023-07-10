@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './banner.module.css'
-import {Container, Row, Col, Navbar, Nav} from 'react-bootstrap'
+import {Container, Row, Col, Navbar, Tooltip, OverlayTrigger} from 'react-bootstrap'
 import { ShiftConfig } from '../../shift_config_def'
 import { ShiftContent } from '../shift/shift'
 import AlertBlock from '../alert/alert'
@@ -95,6 +95,45 @@ export default function Banner(
         
     }
 
+    interface BannerUtility{
+        src: string;
+        alt: string;
+        onClick: () => void;
+    }
+
+    const Utitlities = [
+        {
+            src: "/run.svg",
+            alt: "Run",
+            onClick: handleRun,
+        },
+        {
+            src: "/reload.svg",
+            alt: "Reload",
+            onClick: reloadShiftContent,
+        },
+        {
+            src: "/erase.svg",
+            alt: "Reset",
+            onClick: ()=>{},
+        },
+        {
+            src: "/info.svg",
+            alt: "Info",
+            onClick: ()=>{},
+        },
+        {
+            src: "/download.svg",
+            alt: "Download",
+            onClick: ()=>{},
+        },
+        {
+            src: "/save.svg",
+            alt: "Save",
+            onClick: ()=>{},
+        }
+    ]
+
 
     return (
         <>
@@ -104,31 +143,24 @@ export default function Banner(
                         {props.name}
                     </Navbar.Brand>
                     { running ? <>
-                    <Col sm={4}>
+                    <Col sm={3}>
                          {/* <ProgressBar totalDuration={1000} completed={completed} /> */}
                      </Col>
                      <Col sm={3}>
                             Status : {status}
                      </Col>
                     </> : <>
-                        <Col sm={7}></Col>
+                        <Col sm={6}></Col>
                     </>}
+
+                    {Utitlities.map((utility, index) => (
+                        <Col key={index}>
+                            <OverlayTrigger placement='top' delay={{ show: 350, hide: 150 }} overlay={<Tooltip id={`tooltip-${index}`}>{utility.alt}</Tooltip>}>
+                                <Image className={styles.icon} src={utility.src} width={30} height={30} alt={utility.alt} onClick={utility.onClick}></Image>
+                            </OverlayTrigger>
+                        </Col>
+                    ))}
                     
-                    <Col>
-                        <Image className={styles.icon} src="/run.svg" width={30} height={30} alt="run" onClick={handleRun}></Image>
-                    </Col>
-                    <Col>
-                        <Image className={styles.icon} src="/reset.svg" width={30} height={30} alt="reset" onClick={reloadShiftContent}></Image>
-                    </Col>
-                    <Col>
-                        <Image className={styles.icon} src="/info.svg" width={30} height={30} alt="Info"></Image>
-                    </Col>
-                    <Col>
-                        <Image className={styles.icon} src="/download.svg" width={30} height={30} alt="download"></Image>
-                    </Col>
-                    <Col>
-                        <Image className={styles.icon} src="/save.svg" width={30} height={30} alt="save"></Image>
-                    </Col>
                 </Container>
             </Navbar> 
 

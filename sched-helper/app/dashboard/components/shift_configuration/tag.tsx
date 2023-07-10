@@ -68,7 +68,7 @@ export default function Tag({
 
     return (
         <>
-        <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={tooltip}>
+        <OverlayTrigger placement="top" delay={{ show: 250, hide: 150 }} overlay={tooltip}>
             {added ? (
                 <div className={`${styles.tag} ${styles.tag_chosen}`} onClick={handleClick}>
                     <span className={styles.text}>{props.text}</span>

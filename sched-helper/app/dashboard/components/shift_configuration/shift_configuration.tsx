@@ -1,33 +1,54 @@
 'use client'
 import { Container, Row, Col, Form, FloatingLabel, InputGroup, Button } from 'react-bootstrap'
 import styles from './shift_configuration.module.css'
-import Divider from '@/app/components/divider'
-import Tag from './tag'
 import TagBox from './tagbox'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect, useState, useContext } from 'react'
 import { Constraint } from '../../shift_config_def'
+import { ShiftContext } from '../contexts/shfit_context'
 
 import Score from '../score/score'
+import { set } from 'zod'
 
 export default function ShiftConfiguration(
-    { onShiftConfigChange, onAddingShiftConstraint, onRemovingConstraint }: 
-    { 
-        onShiftConfigChange: (config: {}) => void, 
-        onAddingShiftConstraint: (constraint: Constraint) => void, 
-        onRemovingConstraint: (constraint_name: string) => void }
+    { onShiftConfigChange, onAddingShiftConstraint, onRemovingConstraint }:
+        {
+            onShiftConfigChange: (config: {}) => void,
+            onAddingShiftConstraint: (constraint: Constraint) => void,
+            onRemovingConstraint: (constraint_name: string) => void
+        }
 ) {
 
+    // const [ reset, setReset ] = useState(false)
+    const { shiftConfig, shiftContent } = useContext(ShiftContext)
+    const [days, setDays] = useState(0)
+    const [number_of_workers, setNumberOfWorkers] = useState(0)
+    const [computation_time, setComputationTime] = useState(0)
+
     const handleDaysChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setDays(Number(e.target.value))
         onShiftConfigChange({ days: e.target.value })
     }
 
     const handleNoWChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setNumberOfWorkers(Number(e.target.value))
         onShiftConfigChange({ number_of_workers: e.target.value })
     }
 
     const handleComputationTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setComputationTime(Number(e.target.value))
         onShiftConfigChange({ computation_time: e.target.value })
     }
+
+    useEffect(() => {
+        if (shiftConfig) {
+            console.log("shift config is ready")
+            setDays(shiftConfig.days || 0);
+            setNumberOfWorkers(shiftConfig.number_of_workers || 0);
+            setComputationTime(shiftConfig.computation_time || 0);
+            console.log(shiftConfig)
+        }
+    }, [shiftConfig]);
+
 
     return (
         <>
@@ -38,7 +59,7 @@ export default function ShiftConfiguration(
                             <h6>Score</h6>
                         </Row>
                         <Row className={styles.rows}>
-                            <Score shift_id='9c87a528-44f8-439e-aea3-c4c68dda2bdc' index={0}/> 
+                            <Score shift_id='9c87a528-44f8-439e-aea3-c4c68dda2bdc' index={0} />
                         </Row>
                     </div>
                 </Row>
@@ -54,6 +75,7 @@ export default function ShiftConfiguration(
                                     <Form.Control
                                         type="number"
                                         placeholder="Days"
+                                        value={days}
                                         onChange={handleDaysChange}
                                     />
                                 </FloatingLabel>
@@ -63,6 +85,7 @@ export default function ShiftConfiguration(
                                     <Form.Control
                                         type="number"
                                         placeholder='Number of workers'
+                                        value={number_of_workers}
                                         onChange={handleNoWChange}
                                     />
                                 </FloatingLabel>
@@ -72,7 +95,13 @@ export default function ShiftConfiguration(
 
                             <Col>
                                 <FloatingLabel controlId="floatingInputGrid" label="Computation Time(sec)">
-                                    <Form.Control type="number" aria-describedby="basic-addon2" placeholder='Computation Time(sec)' onChange={handleComputationTimeChange}/>
+                                    <Form.Control
+                                        type="number"
+                                        aria-describedby="basic-addon2"
+                                        placeholder='Computation Time(sec)'
+                                        value={computation_time}
+                                        onChange={handleComputationTimeChange}
+                                    />
                                 </FloatingLabel>
                             </Col>
                         </Row>

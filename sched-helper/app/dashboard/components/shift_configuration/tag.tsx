@@ -1,9 +1,10 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState, useContext } from 'react';
 import styles from './tag.module.css';
 import Image from 'next/image';
 import { Modal, Button, Form, Row, Col, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import { TagProps } from './tags_definition';
 import { Constraint } from '../../shift_config_def';
+import { ShiftContext } from '../contexts/shfit_context';
 
 export default function Tag({
     props,
@@ -14,6 +15,8 @@ export default function Tag({
     onAddingShiftConstraint: (constraint: Constraint) => void;
     onRemovingShiftConstraint: (constraint_name: string) => void; 
 }) {
+    const { shiftConfig, shiftContent } = useContext(ShiftContext)
+
     const [added, setAdded] = useState(false);
     const [show, setShow] = useState(false);
     const [formValues, setFormValues] = useState<{ [name: string]: string }>({});
@@ -46,6 +49,16 @@ export default function Tag({
             [name]: value,
         }));
     };
+
+    useEffect(()=>{
+        if (shiftConfig.constraints){
+            const constraint = shiftConfig.constraints.find((constraint: Constraint)=>constraint.name === props.key);
+            if (constraint){
+                setAdded(true);
+                setFormValues(constraint.parameters);
+            }
+        }
+    }, [shiftConfig])
 
     const tooltip = (
         <Tooltip>

@@ -1,8 +1,6 @@
 import clientPromise from "@/lib/mongodb";
 import { NextResponse, NextRequest } from "next/server";
 
-import { z } from "zod";
-
 export async function GET(request: Request){
     const { searchParams } = new URL(request.url);
     const shift_id = searchParams.get('shift_id');
@@ -19,7 +17,7 @@ export async function GET(request: Request){
         const options = {
             projection: { "shifts": { $slice: [parseInt(id), 1] }, "scores": { $slice: [parseInt(id), 1] } }
         }
-        const result = await collection.findOne({ shift_id: "9c87a528-44f8-439e-aea3-c4c68dda2bdc" }, options)
+        const result = await collection.findOne({ shift_id: shift_id}, options)
 
         // console.log("load")
         console.log(result)

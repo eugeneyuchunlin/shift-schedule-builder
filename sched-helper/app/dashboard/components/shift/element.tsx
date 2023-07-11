@@ -30,6 +30,8 @@ export default function Element({ name, val, col, reset, onChangeElement, classN
     if (newValue === '0'){
       console.log("edit to 0")
       setPreRest(true);
+    }else{
+      setPreRest(false);
     }
   };
 

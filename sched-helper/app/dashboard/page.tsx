@@ -79,7 +79,7 @@ export default function Page() {
                 };
 
                 if (data) {
-                    // console.log(data)
+                    console.log(data)
                     const shift0 = data.shifts[0];
 
                     newContent.number_of_workers = shift0.length;
@@ -88,6 +88,9 @@ export default function Page() {
                     handleShiftConfigChange({
                         number_of_workers: newContent.number_of_workers,
                         days: newContent.days,
+                        // FIXME: compute_time -> computation_time
+                        computation_time: data['compute_time'],
+                        constraints: data['constraints']
                     })
 
                     for (let i = 0; i < newContent.number_of_workers; i++) {

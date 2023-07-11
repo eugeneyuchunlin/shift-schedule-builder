@@ -370,7 +370,7 @@ class DAUSolver():
             "scores" : scores,
             "name_list" : self._namelist,
             "constraints": self._constraints,
-            "compute_time" : self._computation_time,
+            "computation_time" : self._computation_time,
             "days_off_index" : days_off_index
         }
 

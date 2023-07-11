@@ -28,7 +28,7 @@ function average(arr: number[]){
 }
 
 function sum_range(arr: number[], start: number, end: number){
-    let sum = 0;
+    let sum = Number(0);
     for(let i = start; i < end; ++i){
         sum += arr[i];
     }
@@ -38,7 +38,7 @@ function sum_range(arr: number[], start: number, end: number){
 function sum(arr: number[]){
     let sum = 0;
     for(const num of arr){
-        sum += num;
+        sum += Number(num);
     }
     return sum;
 }
@@ -57,17 +57,16 @@ export const TagsDefinition : TagProps[] = [
         ],
         evaluate: (shift: number[][], parameters: Parameters) => {
             return new Promise((resolve, reject) => {
-              const enwd = parameters['ewd'];
+              const enwd = Number(parameters['ewd']);
               let failed_rates = [];
           
               for (let i = 0; i < shift.length; ++i) {
                 failed_rates.push(
-                  Math.abs(enwd - shift[i].reduce((a, b) => a + b, 0)) / enwd
+                  Math.abs(enwd - sum(shift[i]) ) / enwd
                 );
               }
           
               const score = 1 - average(failed_rates);
-              console.log(failed_rates);
               resolve(score);
             });
           }
@@ -105,14 +104,13 @@ export const TagsDefinition : TagProps[] = [
                 for(let i = 0; i < number_of_days; ++i){
                     let sum = 0;
                     for(let j = 0; j < shift.length; ++j){
-                        sum += shift[j][i];
+                        sum += Number(shift[j][i]);
                     }
-                    if(sum !== parameters['enwps']){
+                    if(sum !== Number(parameters['enwps'])){
                         failed += 1;
                     }
                 }
-
-                resolve(number_of_days != 0 ? failed / number_of_days : 0);
+                resolve(number_of_days !== 0 ?  1 - failed / number_of_days : 0);
 
             })
             
@@ -131,7 +129,7 @@ export const TagsDefinition : TagProps[] = [
         ],
         evaluate: (shift: number[][], parameters: Parameters) => {
             return new Promise((resolve, reject) => {
-                let maximum_consecutive_working_days = parameters['mcwd'];
+                let maximum_consecutive_working_days = Number(parameters['mcwd']);
                 let nrows = shift.length;
                 let ncols = 0;
                 if(shift.length > 0 && shift[0]){
@@ -165,7 +163,7 @@ export const TagsDefinition : TagProps[] = [
         ],
         evaluate: (shift: number[][], parameters: Parameters) => {
             return new Promise((resolve, reject) => {
-                const n = parameters['mndlw7d'];
+                const n = Number(parameters['mndlw7d']);
                 let nrows = shift.length;
                 let ncols = 0;
                 if(shift.length > 0 && shift[0]){
@@ -177,7 +175,7 @@ export const TagsDefinition : TagProps[] = [
                 for(let i = 0; i + 7 < ncols; i += 7){
                     weekend.push(i);
                 }
-                console.log("weekend : ", weekend)
+                // console.log("weekend : ", weekend)
 
                 for(let i = 0; i < nrows; ++i){
                     for(let j = 0; j < weekend.length; ++j){
@@ -267,12 +265,12 @@ export const TagsDefinition : TagProps[] = [
                 }
 
                 let failed = 0;
-                let number_of_days = 0;
+                let amount_of_leave = 0;
 
                 for(let i = 0; i < nrows; ++i){
                     for(let j = 0; j < ncols - 1; ++j){
                         if(shift[i][j] === 0){
-                            number_of_days += 1;
+                            amount_of_leave += 1;
                         }
 
                         if(shift[i][j] === 0 && shift[i][j+1] === 0){
@@ -280,7 +278,8 @@ export const TagsDefinition : TagProps[] = [
                         }
                     }
                 }
-                resolve(1 - failed / number_of_days);
+                console.log(failed)
+                resolve(amount_of_leave === 0 ? 1 : 1 - (failed / amount_of_leave));
             })
         }
     }

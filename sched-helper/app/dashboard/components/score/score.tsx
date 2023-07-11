@@ -30,7 +30,7 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
           });
       
           Promise.all(evaluatePromise).then(() => {
-            console.log(constraints_score);
+            // console.log(constraints_score);
             setScores(constraints_score);
           });
         }
@@ -53,8 +53,8 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
         if(shiftContent && shiftContent.content){
             const tempShift = []
             for(const employee of shiftContent.content){
-                // console.log(employee)
-                tempShift.push(employee.shift_array)
+                const convertedArray = employee.shift_array.map(Number);
+                tempShift.push(convertedArray);
             }
             setShift(tempShift)
         }

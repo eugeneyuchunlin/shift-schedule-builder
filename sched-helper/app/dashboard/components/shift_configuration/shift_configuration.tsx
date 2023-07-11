@@ -9,7 +9,13 @@ import { Constraint } from '../../shift_config_def'
 
 import Score from '../score/score'
 
-export default function ShiftConfiguration({ onShiftConfigChange, onAddingShiftConstraint, onRemovingConstraint }: { onShiftConfigChange: (config: {}) => void, onAddingShiftConstraint: (constraint: Constraint) => void, onRemovingConstraint: (constraint_name: string) => void }) {
+export default function ShiftConfiguration(
+    { onShiftConfigChange, onAddingShiftConstraint, onRemovingConstraint }: 
+    { 
+        onShiftConfigChange: (config: {}) => void, 
+        onAddingShiftConstraint: (constraint: Constraint) => void, 
+        onRemovingConstraint: (constraint_name: string) => void }
+) {
 
     const handleDaysChange = (e: ChangeEvent<HTMLInputElement>) => {
         onShiftConfigChange({ days: e.target.value })

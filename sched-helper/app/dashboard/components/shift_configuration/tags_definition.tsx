@@ -9,6 +9,7 @@ export interface TagProps{
     key: string;
     description: string;
     parameters: TagParameter[];
+    evaluate: (shift: number[][], parameters: {}) => Number;
 }
 
 export const TagsDefinition : TagProps[] = [
@@ -22,13 +23,19 @@ export const TagsDefinition : TagProps[] = [
                 parameter_alias: 'ewd',
                 parameter_description: 'Expected working days'
             },
-        ]
+        ],
+        evaluate: (shift: number[][], parameters: {}) => {
+            return 0.1;
+        }
     },
     {
         text: 'Customize leave',
         key: 'customize_leave',
         description: `You are able to customize the leave for each employee, please edit the shift for each employee`,
-        parameters: []
+        parameters: [],
+        evaluate: (shift: number[][], parameters: {}) => {
+            return 0.1;
+        }
     },
     {
         text: 'Expected number of workers per shift',
@@ -40,7 +47,10 @@ export const TagsDefinition : TagProps[] = [
                 parameter_alias: 'enwps',
                 parameter_description: 'Expected number of workers per shift'
             }
-        ]
+        ],
+        evaluate: (shift: number[][], parameters: {}) => {
+            return 0.1;
+        }
     },
     {
         text: 'Maximum consecutive working days',
@@ -52,7 +62,10 @@ export const TagsDefinition : TagProps[] = [
                 parameter_alias: 'mcwd',
                 parameter_description: 'Maximum consecutive working days'
             }
-        ]
+        ],
+        evaluate: (shift: number[][], parameters: {}) => {
+            return 0.1;
+        }
     },
     {
         text: 'Minimum n-days leave within 7-days',
@@ -64,25 +77,37 @@ export const TagsDefinition : TagProps[] = [
                 parameter_alias: 'mndlw7d',
                 parameter_description: 'Minimum n-days leave within 7-days'
             }
-        ]
+        ],
+        evaluate: (shift: number[][], parameters: {}) => {
+            return 0.1;
+        }
     },
     {
         text: 'Successive shift pair',
         key: 'successive_shift_pair',
         description: `The number of successive shift pair that the employee is expected to work`,
-        parameters: []
+        parameters: [],
+        evaluate: (shift: number[][], parameters: {}) => {
+            return 0.1;
+        }
     },
     {
         text: 'Consecutive 2 days leave',
         key: 'consecutive_2_days_leave',
         description: `The number of consecutive 2 days leave that the employee is expected to take`,
-        parameters: []
+        parameters: [],
+        evaluate: (shift: number[][], parameters: {}) => {
+            return 0.1;
+        }
     },
     {
         text: 'No leave on consecutive working days',
         key: 'no_consecutive_leave',
         description: `The employee is not allowed to take leave on consecutive working days`,
-        parameters: []
+        parameters: [],
+        evaluate: (shift: number[][], parameters: {}) => {
+            return 0.1;
+        }
     }
     
 ]

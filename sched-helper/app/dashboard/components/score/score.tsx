@@ -12,7 +12,7 @@ import { Constraint } from '../../shift_config_def';
 
 export default function Score({ shift_id, index }: { shift_id: string, index: number }) {
 
-    const { shiftConfig, shiftContent } = useContext(ShiftContext);
+    const { shiftConfig, shiftContent, updateContentFlag } = useContext(ShiftContext);
 
     const [scores, setScores] = useState(null);
     const [overallScore, setOverallScore] = useState(0);
@@ -51,14 +51,16 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
 
     useEffect(()=>{
         if(shiftContent && shiftContent.content){
+            console.log("edited")
             const tempShift = []
             for(const employee of shiftContent.content){
                 const convertedArray = employee.shift_array.map(Number);
                 tempShift.push(convertedArray);
             }
             setShift(tempShift)
+            console.log(tempShift)
         }
-    }, [shiftContent.content])
+    }, [shiftContent.content, updateContentFlag])
 
 
     return (

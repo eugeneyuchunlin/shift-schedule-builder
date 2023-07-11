@@ -15,6 +15,7 @@ export default function Page() {
     const [shiftConfig, setShiftConfig] = useState({} as ShiftConfig)
     const [shiftContent, setShiftContent] = useState({} as ShiftContent)
     const [reset, setReset] = useState(false)
+    const [updateContentFlag, setUpdateContentFlag] = useState(false)
 
     const handleAddingConstraint = (constraint: Constraint): void => {
         setShiftConfig((prevConfig) => {
@@ -120,6 +121,7 @@ export default function Page() {
 
     const resetShiftContennt = (newContent: ShiftContent) => {
         setShiftContent(newContent);
+        setUpdateContentFlag(!updateContentFlag);
         setReset(true);
         setTimeout(() => {
             setReset(false);
@@ -149,6 +151,7 @@ export default function Page() {
                 .then((newContent) => {
                     // console.log(newContent)
                     setShiftContent(newContent);
+                    setUpdateContentFlag(!updateContentFlag);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -156,25 +159,56 @@ export default function Page() {
         }
     }, [shiftConfig.shift_id]);
 
+    const rescaleShiftContent = async (updatedContent: ShiftContent) => {
+        try {
+          if (!updatedContent.content) updatedContent.content = [];
+      
+          if (updatedContent.content.length < shiftConfig.number_of_workers) {
+            for (let i = updatedContent.content.length; i < shiftConfig.number_of_workers; i++) {
+              updatedContent.content.push({ name: "name " + (i + 1), shift_array: [] as string[] });
+            }
+          } else {
+            updatedContent.content.splice(shiftConfig.number_of_workers);
+          }
+      
+          for (let i = 0; i < updatedContent.content.length; i++) {
+            if (updatedContent.content[i].shift_array.length < shiftConfig.days) {
+              for (let j = updatedContent.content[i].shift_array.length; j < shiftConfig.days; j++) {
+                updatedContent.content[i].shift_array.push("1");
+              }
+            } else {
+              updatedContent.content[i].shift_array.splice(shiftConfig.days);
+            }
+          }
+      
+          console.log(updatedContent);
+          return updatedContent;
+        } catch (error) {
+          throw error;
+        }
+      };
+      
+      
+      
+
     useEffect(() => {
-        // console.log("Number of workers: " + props.number_of_workers)
-        // console.log("Days: " + props.days)
+        console.log("Number of workers: " + shiftConfig.number_of_workers)
+        console.log("Days: " + shiftConfig.days)
         const updatedContent = { ...shiftContent };
         updatedContent.number_of_workers = shiftConfig.number_of_workers;
         updatedContent.days = shiftConfig.days;
 
-        if(!updatedContent.content) updatedContent.content = [];
-
-        for (let i = updatedContent.content.length; i < shiftConfig.number_of_workers; i++) {
-            updatedContent.content.push({ name: "name " + (i + 1), shift_array: [] as string[] });
-        }
-
-        for (let i = 0; i < updatedContent.content.length; i++) {
-            for (let j = updatedContent.content[i].shift_array.length; j < shiftConfig.days; j++) {
-                updatedContent.content[i].shift_array.push("1");
-            }
-        }
-        setShiftContent(updatedContent);
+        console.log("rescale the shift content")
+        rescaleShiftContent(updatedContent)
+        .then((updatedContent: ShiftContent) => {
+          console.log("rescale done");
+          setShiftContent(updatedContent);
+          setUpdateContentFlag(!updateContentFlag);
+        })
+        .catch((error) => {
+          // Handle any errors that occur during rescaling
+          console.error("Rescaling error:", error);
+        });
         
     }, [shiftConfig.number_of_workers, shiftConfig.days]);
 
@@ -189,6 +223,7 @@ export default function Page() {
             new_content.content[index].shift_array[col] = val;
         }
         setShiftContent(new_content); // TODO: should store in a copy
+        setUpdateContentFlag(!updateContentFlag)
     }
 
 
@@ -198,7 +233,7 @@ export default function Page() {
             <Container fluid id={styles.main_container}>
                 <Row id={styles.main_view}>
                     <Col sm={8}>
-                        <ShiftProvider shiftContent={shiftContent} shiftConfig={shiftConfig} >
+                        <ShiftProvider shiftContent={shiftContent} shiftConfig={shiftConfig} updateContentFlag={updateContentFlag}>
                             <ShiftView 
                                 reset={reset}
                                 reloadShiftContent={reloadShiftContent} 
@@ -209,7 +244,7 @@ export default function Page() {
                         
                     </Col>
                     <Col>
-                        <ShiftProvider shiftContent={shiftContent} shiftConfig={shiftConfig} >
+                        <ShiftProvider shiftContent={shiftContent} shiftConfig={shiftConfig} updateContentFlag={updateContentFlag}>
                             <ShiftConfiguration 
                                 onShiftConfigChange={handleShiftConfigChange} 
                                 onAddingShiftConstraint={handleAddingConstraint} 

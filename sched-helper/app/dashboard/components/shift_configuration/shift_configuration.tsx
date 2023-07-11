@@ -26,25 +26,26 @@ export default function ShiftConfiguration(
 
     const handleDaysChange = (e: ChangeEvent<HTMLInputElement>) => {
         setDays(Number(e.target.value))
-        onShiftConfigChange({ days: e.target.value })
+        console.log("days", e.target.value)
+        onShiftConfigChange({ days: Number(e.target.value) })
     }
 
     const handleNoWChange = (e: ChangeEvent<HTMLInputElement>) => {
         setNumberOfWorkers(Number(e.target.value))
-        onShiftConfigChange({ number_of_workers: e.target.value })
+        onShiftConfigChange({ number_of_workers: Number(e.target.value) })
     }
 
     const handleComputationTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
         setComputationTime(Number(e.target.value))
-        onShiftConfigChange({ computation_time: e.target.value })
+        onShiftConfigChange({ computation_time: Number(e.target.value) })
     }
 
     useEffect(() => {
         if (shiftConfig) {
             console.log("shift config is ready")
-            setDays(shiftConfig.days || 0);
-            setNumberOfWorkers(shiftConfig.number_of_workers || 0);
-            setComputationTime(shiftConfig.computation_time || 0);
+            setDays(shiftConfig.days);
+            setNumberOfWorkers(shiftConfig.number_of_workers);
+            setComputationTime(shiftConfig.computation_time);
             console.log(shiftConfig)
         }
     }, [shiftConfig]);

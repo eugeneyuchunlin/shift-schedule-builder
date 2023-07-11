@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useContext } from 'react'
 import Image from 'next/image'
 import styles from './banner.module.css'
 import {Container, Row, Col, Navbar, Tooltip, OverlayTrigger} from 'react-bootstrap'
@@ -7,16 +7,16 @@ import { ShiftConfig } from '../../shift_config_def'
 import { ShiftContent } from '../shift/shift'
 import AlertBlock from '../alert/alert'
 import { setDefaultHighWaterMark } from 'stream'
+import { ShiftContext } from '../contexts/shfit_context'
 
 export default function Banner(
-    {props, shift_content, reloadShiftContent, setDefaultShiftContent} : 
+    {reloadShiftContent, setDefaultShiftContent} : 
     {
-        props: ShiftConfig, 
-        shift_content: ShiftContent
         reloadShiftContent: () => void
         setDefaultShiftContent: () => void
     }
 ) {
+    const { shiftContent, shiftConfig } = useContext(ShiftContext);
 
     const [ running, setRunning ] = useState(false);
     const [ status, setStatus ] = useState("");
@@ -26,7 +26,7 @@ export default function Banner(
     useEffect(()=> {
         taskSocketRef.current = new WebSocket(
             "ws://127.0.0.1:8000" + 
-            `/ws/tasks/${props.shift_id}/`
+            `/ws/tasks/${shiftConfig.shift_id}/`
         );
 
         const taskSocket = taskSocketRef.current;
@@ -55,24 +55,24 @@ export default function Banner(
         return () => {
             taskSocket.close();
         }
-    }, [props.shift_id]) 
+    }, [shiftConfig.shift_id]) 
 
     const handleRun = () => {
         // check if data is valid
         let valid = true;
-        if (!props.number_of_workers || props.number_of_workers <= 0){
+        if (!shiftConfig.number_of_workers || shiftConfig.number_of_workers <= 0){
             valid = false;
         }
 
-        if(!props.days || props.days <= 0){
+        if(!shiftConfig.days || shiftConfig.days <= 0){
             valid = false;
         }
 
-        if(!props.computation_time || props.computation_time <= 0){
+        if(!shiftConfig.computation_time || shiftConfig.computation_time <= 0){
             valid = false;
         }
 
-        if(!props.constraints || props.constraints.length === 0){
+        if(!shiftConfig.constraints || shiftConfig.constraints.length === 0){
             valid = false;
         }
 
@@ -80,12 +80,12 @@ export default function Banner(
             setRunning(true);
             // prepare the data
             const data = {
-                shift_id: props.shift_id,
-                number_of_workers: props.number_of_workers,
-                days: props.days,
-                computation_time: props.computation_time,
-                constraints: props.constraints,
-                content: shift_content.content,
+                shift_id: shiftConfig.shift_id,
+                number_of_workers: shiftConfig.number_of_workers,
+                days: shiftConfig.days,
+                computation_time: shiftConfig.computation_time,
+                constraints: shiftConfig.constraints,
+                content: shiftContent.content,
             }
             if(taskSocketRef.current) {
                 console.log(data)
@@ -143,7 +143,7 @@ export default function Banner(
             <Navbar>
                 <Container fluid>
                     <Navbar.Brand>
-                        {props.name}
+                        {shiftConfig.name}
                     </Navbar.Brand>
                     { running ? <>
                     <Col sm={3}>

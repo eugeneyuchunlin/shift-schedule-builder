@@ -195,17 +195,18 @@ export default function Page() {
             <Container fluid id={styles.main_container}>
                 <Row id={styles.main_view}>
                     <Col sm={8}>
-                        <ShiftView 
-                            props={shiftConfig} 
-                            shiftContent={shiftContent} 
-                            reset={reset}
-                            reloadShiftContent={reloadShiftContent} 
-                            setDefaultShiftContent={setDefaultShiftContent} 
-                            updateShiftContentElement={updateShiftContentElement}
-                        />
+                        <ShiftProvider shiftContent={shiftContent} shiftConfig={shiftConfig} >
+                            <ShiftView 
+                                reset={reset}
+                                reloadShiftContent={reloadShiftContent} 
+                                setDefaultShiftContent={setDefaultShiftContent} 
+                                updateShiftContentElement={updateShiftContentElement}
+                            />
+                        </ShiftProvider>
+                        
                     </Col>
                     <Col>
-                        <ShiftProvider shift_content={shiftConfig}>
+                        <ShiftProvider shiftContent={shiftContent} shiftConfig={shiftConfig} >
                             <ShiftConfiguration 
                                 onShiftConfigChange={handleShiftConfigChange} 
                                 onAddingShiftConstraint={handleAddingConstraint} 

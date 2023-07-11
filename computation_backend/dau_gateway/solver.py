@@ -394,6 +394,8 @@ class DAUSolver():
 class MockSolver(DAUSolver):
 
     def __init__(self, problem):
+        with open("data.json", "r") as file:
+            problem = json.load(file)
         super().__init__(problem)
 
     def solve(self):

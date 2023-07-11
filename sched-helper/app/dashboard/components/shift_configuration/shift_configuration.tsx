@@ -7,6 +7,8 @@ import TagBox from './tagbox'
 import { ChangeEvent } from 'react'
 import { Constraint } from '../../shift_config_def'
 
+import Score from '../score/score'
+
 export default function ShiftConfiguration({ onShiftConfigChange, onAddingShiftConstraint, onRemovingConstraint }: { onShiftConfigChange: (config: {}) => void, onAddingShiftConstraint: (constraint: Constraint) => void, onRemovingConstraint: (constraint_name: string) => void }) {
 
     const handleDaysChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -24,6 +26,16 @@ export default function ShiftConfiguration({ onShiftConfigChange, onAddingShiftC
     return (
         <>
             <Container>
+                <Row>
+                    <div className={styles.section}>
+                        <Row className={`${styles.rows} ${styles.divider}`}>
+                            <h6>Score</h6>
+                        </Row>
+                        <Row className={styles.rows}>
+                            <Score shift_id='9c87a528-44f8-439e-aea3-c4c68dda2bdc' index={0}/> 
+                        </Row>
+                    </div>
+                </Row>
                 <Form className={styles.form} as={Row}>
                     <div className={styles.section}>
                         <Row className={`${styles.rows} ${styles.divider}`}>

@@ -8,7 +8,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { set } from 'zod';
 import { TagsDefinition } from '../shift_configuration/tags_definition';
-
+import { Constraint } from '../../shift_config_def';
 
 export default function Score({ shift_id, index }: { shift_id: string, index: number }) {
 
@@ -16,52 +16,26 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
 
     const [scores, setScores] = useState(null);
     const [overallScore, setOverallScore] = useState(0);
-    // const loadScore = async () => {
-    //     const response = await fetch('/dashboard/api/shifts/score/?shift_id=' + shift_id + '&index=' + index, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     });
-
-    //     if (response.ok) {
-    //         const data = await response.json();
-    //         return data['scores'][0];
-    //     }
-    // };
-
-
-    // useEffect(() => {
-    //     if (!scores) {
-    //         loadScore().then((data) => {
-    //             console.log(data)
-    //             let total_scores = 0;
-    //             for (const [key, value] of Object.entries(data)) {
-    //                 total_scores += Number(value);
-    //             }
-    //             total_scores /= Object.keys(data).length;
-    //             setOverallScore(total_scores);
-    //             setScores(data)
-    //         })
-    //     }
-    //     console.log(shiftContent)
-
-    // }, [shift_id, index])
+    const [shift, setShift] = useState([] as number[][]);
 
     useEffect(() => {
-        if (shiftConfig.constraints) {
-            const constraints = shiftConfig.constraints;
-            const constraints_score = {} as any;
-            for (const constraint of constraints) {
-                const tag = TagsDefinition.find((tag) => tag.key === constraint.name);
-                if (tag) {
-                    constraints_score[tag.text] = tag.evaluate(shiftContent.content, constraint.parameters);
-                }
+        if (shiftConfig.constraints && shift.length) {
+          const constraints = shiftConfig.constraints;
+          const constraints_score = {} as any;
+          const evaluatePromise = constraints.map(async (constraint: Constraint) => {
+            const tag = TagsDefinition.find((tag) => tag.key === constraint.name);
+            if (tag) {
+              constraints_score[tag.text] = await tag.evaluate(shift, constraint.parameters);
             }
-            console.log(constraints_score)
-            setScores(constraints_score)
+          });
+      
+          Promise.all(evaluatePromise).then(() => {
+            console.log(constraints_score);
+            setScores(constraints_score);
+          });
         }
-    }, [shiftConfig.constraints])
+      }, [shiftConfig.constraints, shift]);
+      
 
     useEffect(() => {
         if (scores) {
@@ -69,10 +43,22 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
             for (const [key, value] of Object.entries(scores)) {
                 total_scores += Number(value);
             }
+            // the overall score should be weighted
             total_scores /= Object.keys(scores).length > 0 ? Object.keys(scores).length : 1;
             setOverallScore(total_scores);
         }
     }, [scores])
+
+    useEffect(()=>{
+        if(shiftContent && shiftContent.content){
+            const tempShift = []
+            for(const employee of shiftContent.content){
+                // console.log(employee)
+                tempShift.push(employee.shift_array)
+            }
+            setShift(tempShift)
+        }
+    }, [shiftContent.content])
 
 
     return (

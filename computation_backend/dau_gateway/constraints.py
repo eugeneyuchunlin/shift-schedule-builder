@@ -304,8 +304,8 @@ class MinimumNDaysLeaveWithin7DaysInequalities(MinimumNDaysLeaveWithin7Days):
             for i in self._weekend:
                 if i + 7 < ndays:
                     hamiltonians.append(sum([self._X[j][l] for l in range(i, i + 7)], start=-Num(7-self._n)))
-                elif i + 5 < ndays and i + 7 > ndays:
-                    hamiltonians.append(sum([self._X[j][l] for l in range(i, ndays)], start=-Num(7-self._n)))
+                # elif i + 5 < ndays and i + 7 > ndays:
+                #     hamiltonians.append(sum([self._X[j][l] for l in range(i, ndays)], start=-Num(7-self._n)))
         
         terms = []
         

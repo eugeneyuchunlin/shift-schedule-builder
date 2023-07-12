@@ -60,7 +60,14 @@ export default function Page() {
 
     const handleSelectingShift = (shift_name: string, shift_id: string) => {
         console.log("Selecting shift: " + shift_id);
-        handleShiftConfigChange({name: shift_name, shift_id: shift_id});
+        handleShiftConfigChange({
+            name: shift_name, 
+            shift_id: shift_id,
+            days : 0,
+            number_of_workers: 0,
+            computation_time: 0,
+            constraints: [],
+        });
     }
 
 
@@ -177,7 +184,7 @@ export default function Page() {
             }
           }
       
-          console.log(updatedContent);
+        //   console.log(updatedContent);
           return updatedContent;
         } catch (error) {
           throw error;

@@ -5,6 +5,7 @@ import { Modal, Button, Form, Row, Col, Tooltip, OverlayTrigger } from 'react-bo
 import { TagProps } from './tags_definition';
 import { Constraint } from '../../shift_config_def';
 import { ShiftContext } from '../contexts/shfit_context';
+import { Cabin_Sketch } from 'next/font/google';
 
 export default function Tag({
     props,
@@ -56,6 +57,9 @@ export default function Tag({
             if (constraint) {
                 setAdded(true);
                 setFormValues(constraint.parameters);
+            }else{
+                setAdded(false);
+                setFormValues({});
             }
         }
     }, [shiftConfig])

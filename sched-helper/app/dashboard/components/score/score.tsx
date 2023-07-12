@@ -38,6 +38,8 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
             // console.log(constraints_score);
             setScores(constraints_score);
           });
+        }else{
+            setScores(null)
         }
       }, [shiftConfig.constraints, shift]);
       

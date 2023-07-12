@@ -378,14 +378,11 @@ class DAUSolver():
         db = db_client['test']
         collection = db['shifts']
         # insert or update
-        existed_document = collection.find_one({"shift_id" : self._shift_id})
-        if existed_document:
-            result = collection.update_one(
-                {"shift_id" : self._shift_id},
-                {"$set" : data}
-            )
-        else: 
-            result = collection.insert_one(data)
+        result = collection.update_one(
+            {"shift_id" : self._shift_id},
+            {"$set" : data},
+            upsert=True
+        )
 
         # handle insertion result
         if result.acknowledged:

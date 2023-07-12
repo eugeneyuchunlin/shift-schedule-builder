@@ -222,7 +222,6 @@ export default function Page() {
 
     useEffect(() => {
         if (shiftContent.shift_id !== shiftConfig.shift_id) {
-            console.log("shift id changed, reload")
             reloadShiftContent();
         }
     }, [shiftConfig.shift_id]);

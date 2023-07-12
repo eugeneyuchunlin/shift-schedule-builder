@@ -16,15 +16,15 @@ export async function POST(request: Request){
     try{
         const json = await request.json(); 
         const body = schema.parse(json);
-        console.log(body);
+        // console.log(body);
 
         // generate a unique ID for the shift
         const uniqueId = uuidv4();
-        console.log(uniqueId) 
+        // console.log(uniqueId) 
 
         const client = await clientPromise;
         const db = await client.db();
-        const collection = await db.collection('shifts-list');
+        const collection = await db.collection('shifts');
         await collection.insertOne({shift_name: body.name, shift_id: uniqueId});
         return NextResponse.json({"shift_id": uniqueId});
     }catch(err){

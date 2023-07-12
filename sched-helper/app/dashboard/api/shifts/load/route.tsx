@@ -15,12 +15,12 @@ export async function GET(request: Request){
         const db = await client.db();
         const collection = await db.collection('shifts');
         const options = {
-            projection: { "shifts": { $slice: [parseInt(id), 1] }, "scores": { $slice: [parseInt(id), 1] } }
+            projection: { "shifts": { $slice: [parseInt(id), 1] } }
         }
         const result = await collection.findOne({ shift_id: shift_id}, options)
 
         // console.log("load")
-        console.log(result)
+        // console.log(result)
         return NextResponse.json(result);
     }catch(err){
         console.log(err);

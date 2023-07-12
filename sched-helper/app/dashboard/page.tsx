@@ -83,7 +83,7 @@ export default function Page() {
                     content: [],
                 };
 
-                if (data) {
+                if (data.shifts) {
                     // console.log(data)
                     const shift0 = data.shifts[0];
 

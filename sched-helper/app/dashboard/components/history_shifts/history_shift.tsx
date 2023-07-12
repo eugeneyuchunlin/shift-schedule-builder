@@ -57,6 +57,34 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_nam
     }
   };
 
+  const saveShiftName = async (id: string, name: string) => {
+    try{
+      const res = await fetch('/dashboard/api/shifts/rename', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({shift_id: id, name: name}),
+      });
+      const json = await res.json();
+      console.log(json);
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  const updateShiftName = async (id: string, name: string) => {
+    const newShiftsList = shifts.map((shift) => {
+      if (shift.id === id) {
+        return { ...shift, name: name };
+      }
+      return shift;
+    });
+    await saveShiftName(id, name);
+    setShifts(newShiftsList);
+  };
+  
+
   return (
     <>
       <Navbar items={[<Nav.Link key={1} onClick={() => setShow(true)}>Your Shifts</Nav.Link>]}>
@@ -79,6 +107,7 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_nam
                 shift_id={shift.id} 
                 name={shift.name} 
                 onSelectShift={(name:string, shift_id:string) => {onSelectShift(name, shift_id), setShow(false)}}
+                onRenameShift={updateShiftName}
               />
             ))}
           </Container>

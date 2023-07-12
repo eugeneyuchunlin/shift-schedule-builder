@@ -5,7 +5,19 @@ import Image from 'next/image';
 import { useState } from 'react';
 // import delete_svg from '@app/public/delete.svg'
 
-export default function ShiftBlock({name, shift_id, onSelectShift}: {name: string, shift_id: string, onSelectShift: (shift_name: string, shift_id: string)=>void}) {
+export default function ShiftBlock(
+  {
+    name, 
+    shift_id, 
+    onSelectShift,
+    onRenameShift,
+  }: {
+    name: string, 
+    shift_id: string, 
+    onSelectShift: (shift_name: string, shift_id: string)=>void,
+    onRenameShift: (shift_id: string, name: string)=>void
+  }
+) {
   const [isEdit, setIsEdit] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [inputValue, setInputValue] = useState(name);
@@ -25,20 +37,20 @@ export default function ShiftBlock({name, shift_id, onSelectShift}: {name: strin
     setIsEdited(true);
   };
 
-  const save = () => {
-
-    // TODO: save to database
-    fetch('/dashboard/api/shifts/rename', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({shift_id: shift_id, name: inputValue}),
-    }).then((res) => res.json()).then((json) => {
-      console.log(json);
-      onSelectShift(inputValue, shift_id);
-      setIsEdit(false);
-    })
+  const save = async () => {
+    await onRenameShift(shift_id, inputValue);
+    onSelectShift(inputValue, shift_id);
+    // fetch('/dashboard/api/shifts/rename', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({shift_id: shift_id, name: inputValue}),
+    // }).then((res) => res.json()).then((json) => {
+    //   console.log(json);
+    //   onSelectShift(inputValue, shift_id);
+    //   setIsEdit(false);
+    // })
   }
 
   const deleteShift = () =>{

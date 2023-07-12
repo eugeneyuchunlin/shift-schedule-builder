@@ -4,7 +4,7 @@ import Image from 'next/image'
 import styles from './banner.module.css'
 import { Container, Row, Col, Navbar, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import { ShiftConfig } from '../../shift_config_def'
-import { ShiftContent } from '../shift/shift'
+import { ShiftContent, PersonalShiftContent } from '../shift/shift'
 import AlertBlock from '../alert/alert'
 import { setDefaultHighWaterMark } from 'stream'
 import { ShiftContext } from '../contexts/shfit_context'
@@ -106,6 +106,47 @@ export default function Banner(
 
     }
 
+    const handleSave = async () =>{
+        // seperate name and shift_array
+        const name_list = [] as string[];
+        const shift_array_list = [] as string[][];
+        shiftContent.content.forEach((element: PersonalShiftContent) => {
+            name_list.push(element.name);
+            shift_array_list.push(element.shift_array);
+        });
+
+        const constraints = [ ...shiftConfig.constraints ]
+        constraints.forEach((constraint) => {
+            if(constraint.name === 'customize_leave'){
+                if('reserved_leave' in constraint.parameters){
+                    delete constraint.parameters.reserved_leave
+                }
+            }
+        })
+
+        console.log("constraints : ", constraints)
+        console.log('reserved_leave : ', reservedLeave)
+
+        const data = {
+            shift_id: shiftConfig.shift_id,
+            computation_time: shiftConfig.computation_time || 0,
+            name_list: name_list,
+            shift: shift_array_list,
+            constraints: constraints,
+            reserved_leave: reservedLeave
+        }
+        console.log(data)
+
+        const response = await fetch('/dashboard/api/shifts/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        console.log("saved")
+    }
+
     interface BannerUtility {
         src: string;
         alt: string;
@@ -144,7 +185,7 @@ export default function Banner(
         {
             src: "/save.svg",
             alt: "Save",
-            onClick: () => { },
+            onClick: () => { handleSave() },
         }
     ]
 

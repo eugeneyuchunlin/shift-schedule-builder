@@ -104,7 +104,7 @@ export default function Page() {
                     for (let i = 0; i < newContent.number_of_workers; i++) {
                         newContent.content.push({
                             name: data['name_list'][i],
-                            shift_array: shift0[i],
+                            shift_array: shift0[i].map((element: number) => element.toString()),
                         });
                     }
 

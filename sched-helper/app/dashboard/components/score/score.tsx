@@ -26,6 +26,9 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
           const constraints_score = {} as any;
           const evaluatePromise = constraints.map(async (constraint: Constraint) => {
             const tag = TagsDefinition.find((tag) => tag.key === constraint.name);
+            if(constraint.name === 'customize_leave' && tag){
+                constraint.parameters = { ...constraint.parameters, reserved_leave: reservedLeave }
+            }
             if (tag) {
               constraints_score[tag.text] = await tag.evaluate(shift, constraint.parameters);
             }

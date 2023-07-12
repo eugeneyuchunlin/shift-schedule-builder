@@ -16,7 +16,7 @@ export interface TagProps{
 }
 
 type Parameters = {
-    [key: string]: number;
+    [key: string]: any;
   };
 
 function average(arr: number[]){
@@ -76,9 +76,25 @@ export const TagsDefinition : TagProps[] = [
         key: 'customize_leave',
         description: `You are able to customize the leave for each employee, please edit the shift for each employee`,
         parameters: [],
-        evaluate: (shift: number[][], parameters: {}) => {
+        evaluate: (shift: number[][], parameters: Parameters) => {
             return new Promise((resolve, reject) => {
-                resolve(0.1)
+                // console.log(parameters)
+                const reserved_leave = parameters['reserved_leave'];
+                // console.log(reserved_leave)
+                let failed = 0;
+                let amount_of_reserved_leave = 0;
+                Object.entries(reserved_leave).forEach(([key, value]) => {
+                    const row = Number(key);
+                    for (const col of value as number[]) {
+                      if (col < shift[row].length && shift[row][col] !== 0) {
+                        failed += 1;
+                      }
+                      amount_of_reserved_leave += 1;
+                    }
+                  });
+                  
+                resolve(amount_of_reserved_leave ? 1 - (failed / amount_of_reserved_leave): 1);
+                // resolve(0.1)
             })
         }
     },

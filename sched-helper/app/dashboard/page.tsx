@@ -256,6 +256,25 @@ export default function Page() {
     }, [shiftConfig.number_of_workers, shiftConfig.days]);
 
 
+    useEffect(() =>{
+       const newReservedLeave = {...reservedLeave}
+       // if key is greater than number of workers, delete it
+        for (const key in newReservedLeave){
+            if (Number(key) >= shiftConfig.number_of_workers){
+                delete newReservedLeave[key]
+            }
+        } 
+
+        // for each key, if the element in the array is greater than number of days, delete it
+        for (const key in newReservedLeave) {
+            const newLeave = newReservedLeave[key].filter((element) => element.valueOf() < shiftConfig.days);
+            newReservedLeave[key] = newLeave;
+        }
+        setReservedLeave(newReservedLeave);          
+
+    }, [shiftConfig.number_of_workers, shiftConfig.days])
+
+
     return (
         <>
             <HistoryShifts onSelectShift={handleSelectingShift}/>

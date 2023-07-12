@@ -2,28 +2,36 @@ import { useEffect, useState, useContext } from 'react';
 import styles from './element.module.css';
 import { set } from 'zod';
 import { ShiftContext } from '../contexts/shfit_context'
+import { ElementContext } from '../contexts/element_context'
 
 type ElementProps = {
   name: string;
   val: string;
   row: number;
   col: number;
-  reset: boolean;
   brushMode: boolean;
-  onChangeElement: (name: string, col: number, val: string) => void;
   className?: string;
 };
 
-export default function Element({ name, val, row, col, reset, brushMode, onChangeElement, className }: ElementProps) {
+export default function Element(
+  { 
+    name, 
+    val, 
+    row, 
+    col, 
+    brushMode, 
+    className 
+  }: ElementProps
+  ) {
   const [inputValue, setInputValue] = useState(val);
   const [ reservedClassName, setReservedClassName ] = useState(""); 
   const [ reserved, setReserved ] = useState(false);
 
   const { reservedLeave, updateReservedFlag } = useContext(ShiftContext)
+  const { reset, updateShiftContentElement, addReservedLeave, removeReservedLeave }  = useContext(ElementContext)
 
   useEffect(() => {
     if (reset){
-      // console.log("element is reset")
       setReserved(false)
       setReservedClassName("")
       setInputValue(val);
@@ -32,8 +40,9 @@ export default function Element({ name, val, row, col, reset, brushMode, onChang
 
   useEffect(()=>{
       if(Object.keys(reservedLeave).length > 0){
-        if(row in reservedLeave){
-          if(reservedLeave[row].includes(col)){
+        const str_row = row.toString()
+        if(str_row in reservedLeave){
+          if(reservedLeave[str_row].includes(col)){
             setReserved(true)
             setReservedClassName(styles.element_reserve0)
           }
@@ -44,7 +53,7 @@ export default function Element({ name, val, row, col, reset, brushMode, onChang
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
-    onChangeElement(name, col, newValue);
+    updateShiftContentElement(name, col, newValue);
   };
 
   const handleReservedRest = () => {
@@ -53,14 +62,21 @@ export default function Element({ name, val, row, col, reset, brushMode, onChang
       if(reserved){
         setReserved(false)
         setReservedClassName("")
+        if(Number(inputValue) === 0){
+          removeReservedLeave(row, col)
+        }else{
+          // removeReservedWD(row, col)
+        }
       }else{
         setReserved(true)
         // console.log(Number(inputValue) === 0)
         if(Number(inputValue) === 0){
           // console.log("set reserve0")
           setReservedClassName(styles.element_reserve0)
+          addReservedLeave(row, col)
         }else{
           setReservedClassName(styles.element_reserve1)
+          // addReservedWD(row, col)
         }
       }
     } 

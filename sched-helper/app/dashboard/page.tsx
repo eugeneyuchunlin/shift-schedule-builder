@@ -8,6 +8,7 @@ import ShiftView from './components/shift/shift_view'
 import styles from './page.module.css'
 import { ShiftConfig, Constraint } from './shift_config_def'
 import { ShiftProvider } from './components/contexts/shfit_context';
+import { ElementProvider } from './components/contexts/element_context';
 import { ShiftContent } from './components/shift/shift'
 
 export default function Page() {
@@ -16,8 +17,8 @@ export default function Page() {
     const [shiftContent, setShiftContent] = useState({} as ShiftContent)
     const [reset, setReset] = useState(false)
     const [updateContentFlag, setUpdateContentFlag] = useState(false)
-    const [reservedLeave, setReservedLeave] = useState({} as {[key: string]: number[]}) // reserved Leave
-    const [reservedWD, setReservedWD] = useState({} as {[key: string]: number[]}) // reserved Working Days
+    const [reservedLeave, setReservedLeave] = useState({} as {[key: string]: Number[]}) // reserved Leave
+    const [reservedWD, setReservedWD] = useState({} as {[key: string]: Number[]}) // reserved Working Days
     const [updateReservedFlag, setUpdateReservedFlag] = useState(false)
 
     const handleAddingConstraint = (constraint: Constraint): void => {
@@ -197,6 +198,28 @@ export default function Page() {
         setUpdateContentFlag(!updateContentFlag)
     }
 
+    const addReservedLeave = (row: Number, col: Number) =>{
+        const newReservedLeave = {...reservedLeave}
+        if (!(row.toString() in newReservedLeave)){
+            newReservedLeave[row.toString()] = []
+        }
+        newReservedLeave[row.toString()].push(col)
+        setReservedLeave(newReservedLeave)
+        console.log(newReservedLeave)
+    }
+
+    const removeReservedLeave = (row: Number, col: Number) =>{
+        const newReservedLeave = {...reservedLeave}
+        console.log("remove reserved leave", row, col);
+        if (row.toString() in newReservedLeave){
+            const index = newReservedLeave[row.toString()].indexOf(col)
+            if (index > -1){
+                newReservedLeave[row.toString()].splice(index, 1)
+            }
+        }
+        console.log(newReservedLeave)
+    }
+
     useEffect(() => {
         if (shiftContent.shift_id !== shiftConfig.shift_id) {
             loadShiftContent()
@@ -247,12 +270,19 @@ export default function Page() {
                             reservedWD={reservedWD}
                             updateReservedFlag={updateReservedFlag}
                         >
-                            <ShiftView 
+                            <ElementProvider
                                 reset={reset}
-                                reloadShiftContent={reloadShiftContent} 
-                                setDefaultShiftContent={setDefaultShiftContent} 
-                                updateShiftContentElement={updateShiftContentElement}
-                            />
+                                updateShiftContentElement={updateShiftContentElement} 
+                                addReservedLeave={addReservedLeave}
+                                removeReservedLeave={removeReservedLeave}
+                            >
+                                <ShiftView 
+                                    reset={reset}
+                                    reloadShiftContent={reloadShiftContent} 
+                                    setDefaultShiftContent={setDefaultShiftContent} 
+                                    updateShiftContentElement={updateShiftContentElement}
+                                />
+                            </ElementProvider>
                         </ShiftProvider>
                         
                     </Col>

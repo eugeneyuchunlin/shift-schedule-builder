@@ -8,8 +8,18 @@ import { ShiftContext } from '../contexts/shfit_context';
 
 
 export default function ShiftView(
-    { reset, reloadShiftContent, setDefaultShiftContent, updateShiftContentElement }: 
-    { reset: boolean, reloadShiftContent: () => void, setDefaultShiftContent: () => void, updateShiftContentElement: (name: string, col: number, val: string) => void }
+    { 
+        reset, 
+        reloadShiftContent, 
+        setDefaultShiftContent, 
+        updateShiftContentElement 
+    }: 
+    { 
+        reset: boolean, 
+        reloadShiftContent: () => void, 
+        setDefaultShiftContent: () => void, 
+        updateShiftContentElement: (name: string, col: number, val: string) => void 
+    }
 ) {
     const { shiftContent, shiftConfig } = useContext(ShiftContext)
     const [ editFixed, setFixedMode ] = useState(false);
@@ -28,11 +38,7 @@ export default function ShiftView(
                         <hr />
                     </Row>
                     <Row>
-                        <Shift
-                            reset={reset}
-                            brushMode={editFixed}
-                            updateShiftContentElement={updateShiftContentElement}
-                        />
+                        <Shift brushMode={editFixed}/>
                     </Row>
                 </Container>
             ) : (

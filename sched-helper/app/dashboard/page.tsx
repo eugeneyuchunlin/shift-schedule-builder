@@ -94,11 +94,11 @@ export default function Page() {
                         number_of_workers: newContent.number_of_workers,
                         days: newContent.days,
                         // FIXME: compute_time -> computation_time
-                        computation_time: data['compute_time'],
+                        computation_time: data['computation_time'],
                         constraints: data['constraints']
                     })
                     // FIXME: days_off_index -> reserved_leave
-                    setReservedLeave(data['days_off_index'])
+                    setReservedLeave(data['reserved_leave'])
                     console.log("reload reserved leave")
 
                     for (let i = 0; i < newContent.number_of_workers; i++) {

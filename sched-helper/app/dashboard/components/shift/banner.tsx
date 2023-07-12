@@ -21,7 +21,7 @@ export default function Banner(
             setFixedMode: (mode: boolean) => void
         }
 ) {
-    const { shiftContent, shiftConfig } = useContext(ShiftContext);
+    const { shiftContent, shiftConfig, reservedLeave } = useContext(ShiftContext);
 
     const [running, setRunning] = useState(false);
     const [status, setStatus] = useState("");
@@ -92,6 +92,7 @@ export default function Banner(
                 computation_time: shiftConfig.computation_time,
                 constraints: shiftConfig.constraints,
                 content: shiftContent.content,
+                reserved_leave: reservedLeave
             }
             if (taskSocketRef.current) {
                 console.log(data)

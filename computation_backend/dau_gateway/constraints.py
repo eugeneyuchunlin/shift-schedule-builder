@@ -428,7 +428,7 @@ class PreferenceDayOff(ConstraintFunction):
         for key, array in self._days_off_config.items():
             for i in range(len(array)):
                 date = array[i]
-                hamiltonian += self._X[key][date]
+                hamiltonian += self._X[int(key)][date]
         
         return hamiltonian
     
@@ -439,7 +439,7 @@ class PreferenceDayOff(ConstraintFunction):
         for key, array in self._days_off_config.items():
             for i in range(len(array)):
                 date = array[i]
-                if table.values[key][date] == 1:
+                if table.values[int(key)][date] == 1:
                     print(f"\tWorker[{key}] has to work on date {date}")
                     failed += 1
                 all_settings += 1

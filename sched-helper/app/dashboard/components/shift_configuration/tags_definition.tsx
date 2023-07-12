@@ -160,7 +160,7 @@ export const TagsDefinition : TagProps[] = [
                         }
                     }
                 }
-                console.log("maximum consecutive working days", failed, ncols, nrows)
+                // console.log("maximum consecutive working days", failed, ncols, nrows)
                 resolve(1 - (failed / (nrows * (ncols - maximum_consecutive_working_days))))
             })
 

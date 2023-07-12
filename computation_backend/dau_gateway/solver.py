@@ -66,18 +66,19 @@ class DAUSolver():
         # so we don't have to worry about the redundant data
         # but we still have to minimize the content
         # only the days-off's index would be passed to the constraint function
-        days_off_index = {}
-        for i in range(len(problem['content'])):
-            days_off_index[i] = []
-            shift_array = problem['content'][i]['shift_array']
-            for j in range(len(shift_array)):
-                if shift_array[j] == '0':
-                    days_off_index[i].append(j)
+        # days_off_index = {}
+        # for i in range(len(problem['content'])):
+        #     days_off_index[i] = []
+        #     shift_array = problem['content'][i]['shift_array']
+        #     for j in range(len(shift_array)):
+        #         if shift_array[j] == '0':
+        #             days_off_index[i].append(j)
 
-        self._days_off_index = days_off_index
+        self._days_off_index = problem['reserved_leave']
+        print(self._days_off_index)
 
         for i in range(len(constraints)):
-            constraints[i]['parameters']['days_off_index'] = days_off_index
+            constraints[i]['parameters']['days_off_index'] = self._days_off_index
 
         self._binomial_constraints = []
         self._inequality_constraints = []
@@ -371,7 +372,7 @@ class DAUSolver():
             "name_list" : self._namelist,
             "constraints": self._constraints,
             "computation_time" : self._computation_time,
-            "days_off_index" : days_off_index
+            "reserved_leave" : days_off_index
         }
 
         db = db_client['test']

@@ -152,19 +152,7 @@ export default function Page() {
         setUpdateReservedFlag(!updateReservedFlag);
     }
 
-    useEffect(() => {
-        if (shiftContent.shift_id !== shiftConfig.shift_id) {
-            loadShiftContent()
-                .then((newContent) => {
-                    // console.log(newContent)
-                    setShiftContent(newContent);
-                    setUpdateContentFlag(!updateContentFlag);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    }, [shiftConfig.shift_id]);
+    
 
     const rescaleShiftContent = async (updatedContent: ShiftContent) => {
         try {
@@ -194,9 +182,34 @@ export default function Page() {
           throw error;
         }
       };
-      
-      
-      
+
+
+    const updateShiftContentElement = (name: string, col: number, val: string) => {
+        const new_content = { ...shiftContent };
+        const index = new_content.content.findIndex((element) => element.name === name);
+
+        if (col < 0){
+            new_content.content[index].name = val;
+        }else{
+            new_content.content[index].shift_array[col] = val;
+        }
+        setShiftContent(new_content); // TODO: should store in a copy
+        setUpdateContentFlag(!updateContentFlag)
+    }
+
+    useEffect(() => {
+        if (shiftContent.shift_id !== shiftConfig.shift_id) {
+            loadShiftContent()
+                .then((newContent) => {
+                    // console.log(newContent)
+                    setShiftContent(newContent);
+                    setUpdateContentFlag(!updateContentFlag);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    }, [shiftConfig.shift_id]);
 
     useEffect(() => {
         // console.log("Number of workers: " + shiftConfig.number_of_workers)
@@ -218,20 +231,6 @@ export default function Page() {
         });
         
     }, [shiftConfig.number_of_workers, shiftConfig.days]);
-
-
-    const updateShiftContentElement = (name: string, col: number, val: string) => {
-        const new_content = { ...shiftContent };
-        const index = new_content.content.findIndex((element) => element.name === name);
-
-        if (col < 0){
-            new_content.content[index].name = val;
-        }else{
-            new_content.content[index].shift_array[col] = val;
-        }
-        setShiftContent(new_content); // TODO: should store in a copy
-        setUpdateContentFlag(!updateContentFlag)
-    }
 
 
     return (

@@ -150,7 +150,7 @@ export default function Page() {
     const reloadShiftContent = async () => {
         const originalContent = await loadShiftContent();
         resetShiftContennt(originalContent);
-        setUpdateReservedFlag(!updateReservedFlag);
+        setUpdateReservedFlag((prevFlag) => !prevFlag);
     }
 
     

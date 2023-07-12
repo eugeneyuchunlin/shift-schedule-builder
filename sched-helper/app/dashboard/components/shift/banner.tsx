@@ -52,6 +52,7 @@ export default function Banner(
             }
 
             if (data.message === "Saved") {
+                reloadShiftContent();
                 setTimeout(() => {
                     setRunning(false);
                 }, 1000)

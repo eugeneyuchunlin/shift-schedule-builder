@@ -19,10 +19,11 @@ export interface ShiftContent {
 
 interface ShiftProps {
   reset: boolean;
+  brushMode: boolean;
   updateShiftContentElement: (name: string, col: number, val: string) => void;
 }
 
-export default function Shift({reset,  updateShiftContentElement }: ShiftProps) {
+export default function Shift({reset, brushMode, updateShiftContentElement }: ShiftProps) {
 
   const { shiftContent, shiftConfig } = useContext(ShiftContext)
 
@@ -51,6 +52,7 @@ export default function Shift({reset,  updateShiftContentElement }: ShiftProps) 
                       className={styles.headcol}
                       val={shiftContent.content[index].name}
                       reset={reset}
+                      brushMode={brushMode}
                       onChangeElement={updateShiftContentElement}
                     />
                     {Array.from({ length: shiftContent.days }).map((_, index2) => (
@@ -59,6 +61,7 @@ export default function Shift({reset,  updateShiftContentElement }: ShiftProps) 
                         col={index2}
                         key={index2}
                         val={shiftArray[index2]}
+                        brushMode={brushMode}
                         reset={reset}
                         onChangeElement={updateShiftContentElement}
                       />

@@ -10,6 +10,18 @@
     background-color: rgb(173, 212, 247);
 }
 
-.element:focus{
+.element_reserve0{
+    background-color: rgb(173, 212, 247);
+}
+
+.element_not_brush_mode:focus{
     background-color: rgb(237, 234, 234);
+}
+
+/* .element:focus{
+    background-color: rgb(237, 234, 234);
+} */
+
+.element_brush_mode{
+    cursor: pointer!important;;  
 }

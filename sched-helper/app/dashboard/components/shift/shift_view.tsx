@@ -12,6 +12,7 @@ export default function ShiftView(
     { reset: boolean, reloadShiftContent: () => void, setDefaultShiftContent: () => void, updateShiftContentElement: (name: string, col: number, val: string) => void }
 ) {
     const { shiftContent, shiftConfig } = useContext(ShiftContext)
+    const [ editFixed, setFixedMode ] = useState(false);
     return (
         <>
             {shiftConfig.shift_id ? (
@@ -20,6 +21,7 @@ export default function ShiftView(
                         <Banner 
                             reloadShiftContent={reloadShiftContent}
                             setDefaultShiftContent={setDefaultShiftContent}
+                            setFixedMode={setFixedMode}
                         />
                     </Row>
                     <Row>
@@ -28,6 +30,7 @@ export default function ShiftView(
                     <Row>
                         <Shift
                             reset={reset}
+                            brushMode={editFixed}
                             updateShiftContentElement={updateShiftContentElement}
                         />
                     </Row>

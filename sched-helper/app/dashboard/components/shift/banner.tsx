@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useContext } from 'react'
 import Image from 'next/image'
 import styles from './banner.module.css'
-import {Container, Row, Col, Navbar, Tooltip, OverlayTrigger} from 'react-bootstrap'
+import { Container, Row, Col, Navbar, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import { ShiftConfig } from '../../shift_config_def'
 import { ShiftContent } from '../shift/shift'
 import AlertBlock from '../alert/alert'
@@ -10,22 +10,28 @@ import { setDefaultHighWaterMark } from 'stream'
 import { ShiftContext } from '../contexts/shfit_context'
 
 export default function Banner(
-    {reloadShiftContent, setDefaultShiftContent} : 
     {
-        reloadShiftContent: () => void
-        setDefaultShiftContent: () => void
-    }
+        reloadShiftContent,
+        setDefaultShiftContent,
+        setFixedMode,
+    }:
+        {
+            reloadShiftContent: () => void
+            setDefaultShiftContent: () => void
+            setFixedMode: (mode: boolean) => void
+        }
 ) {
     const { shiftContent, shiftConfig } = useContext(ShiftContext);
 
-    const [ running, setRunning ] = useState(false);
-    const [ status, setStatus ] = useState("");
-    const [ showAlert, setShowAlert ] = useState(false);
+    const [running, setRunning] = useState(false);
+    const [status, setStatus] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [brushMode, setBrushMode] = useState(false);
 
     const taskSocketRef = useRef<WebSocket | null>(null);
-    useEffect(()=> {
+    useEffect(() => {
         taskSocketRef.current = new WebSocket(
-            "ws://127.0.0.1:8000" + 
+            "ws://127.0.0.1:8000" +
             `/ws/tasks/${shiftConfig.shift_id}/`
         );
 
@@ -41,12 +47,12 @@ export default function Banner(
 
         taskSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
-            if (data.message){
+            if (data.message) {
                 setStatus(data.message)
             }
 
-            if (data.message === "Saved"){
-                setTimeout(()=>{
+            if (data.message === "Saved") {
+                setTimeout(() => {
                     setRunning(false);
                 }, 1000)
             }
@@ -55,28 +61,28 @@ export default function Banner(
         return () => {
             taskSocket.close();
         }
-    }, [shiftConfig.shift_id]) 
+    }, [shiftConfig.shift_id])
 
     const handleRun = () => {
         // check if data is valid
         let valid = true;
-        if (!shiftConfig.number_of_workers || shiftConfig.number_of_workers <= 0){
+        if (!shiftConfig.number_of_workers || shiftConfig.number_of_workers <= 0) {
             valid = false;
         }
 
-        if(!shiftConfig.days || shiftConfig.days <= 0){
+        if (!shiftConfig.days || shiftConfig.days <= 0) {
             valid = false;
         }
 
-        if(!shiftConfig.computation_time || shiftConfig.computation_time <= 0){
+        if (!shiftConfig.computation_time || shiftConfig.computation_time <= 0) {
             valid = false;
         }
 
-        if(!shiftConfig.constraints || shiftConfig.constraints.length === 0){
+        if (!shiftConfig.constraints || shiftConfig.constraints.length === 0) {
             valid = false;
         }
 
-        if(valid){
+        if (valid) {
             setRunning(true);
             // prepare the data
             const data = {
@@ -87,18 +93,18 @@ export default function Banner(
                 constraints: shiftConfig.constraints,
                 content: shiftContent.content,
             }
-            if(taskSocketRef.current) {
+            if (taskSocketRef.current) {
                 console.log(data)
                 taskSocketRef.current.send(JSON.stringify(data));
             }
-        }else{
+        } else {
             console.log("show alert")
             setShowAlert(true);
         }
-        
+
     }
 
-    interface BannerUtility{
+    interface BannerUtility {
         src: string;
         alt: string;
         onClick: () => void;
@@ -121,19 +127,22 @@ export default function Banner(
             onClick: setDefaultShiftContent,
         },
         {
-            src: "/info.svg",
-            alt: "Info",
-            onClick: ()=>{},
+            src: "/brush.svg",
+            alt: "Fix",
+            onClick: () => {
+                setBrushMode(!brushMode);
+                setFixedMode(!brushMode);
+            },
         },
         {
             src: "/download.svg",
             alt: "Download",
-            onClick: ()=>{},
+            onClick: () => { },
         },
         {
             src: "/save.svg",
             alt: "Save",
-            onClick: ()=>{},
+            onClick: () => { },
         }
     ]
 
@@ -145,13 +154,13 @@ export default function Banner(
                     <Navbar.Brand>
                         {shiftConfig.name}
                     </Navbar.Brand>
-                    { running ? <>
-                    <Col sm={3}>
-                         {/* <ProgressBar totalDuration={1000} completed={completed} /> */}
-                     </Col>
-                     <Col sm={3}>
+                    {running ? <>
+                        <Col sm={3}>
+                            {/* <ProgressBar totalDuration={1000} completed={completed} /> */}
+                        </Col>
+                        <Col sm={3}>
                             Status : {status}
-                     </Col>
+                        </Col>
                     </> : <>
                         <Col sm={6}></Col>
                     </>}
@@ -159,15 +168,20 @@ export default function Banner(
                     {Utitlities.map((utility, index) => (
                         <Col key={index}>
                             <OverlayTrigger placement='top' delay={{ show: 350, hide: 150 }} overlay={<Tooltip id={`tooltip-${index}`}>{utility.alt}</Tooltip>}>
-                                <Image className={styles.icon} src={utility.src} width={30} height={30} alt={utility.alt} onClick={utility.onClick}></Image>
+                                {brushMode && index === 3 ? (
+                                    <Image className={`${styles.icon} ${styles.icon_active_mode}`} src={utility.src} width={30} height={30} alt={utility.alt} onClick={utility.onClick} />
+                                ) : (
+                                    <Image className={styles.icon} src={utility.src} width={30} height={30} alt={utility.alt} onClick={utility.onClick} />
+                                )}
                             </OverlayTrigger>
+
                         </Col>
                     ))}
-                    
-                </Container>
-            </Navbar> 
 
-            <AlertBlock show={showAlert} handleClose={()=>{setShowAlert(false)}} />
+                </Container>
+            </Navbar>
+
+            <AlertBlock show={showAlert} handleClose={() => { setShowAlert(false) }} />
         </>
     )
 }

@@ -7,18 +7,21 @@ type ElementProps = {
   val: string;
   col: number;
   reset: boolean;
+  brushMode: boolean;
   onChangeElement: (name: string, col: number, val: string) => void;
   className?: string;
 };
 
-export default function Element({ name, val, col, reset, onChangeElement, className }: ElementProps) {
+export default function Element({ name, val, col, reset, brushMode, onChangeElement, className }: ElementProps) {
   const [inputValue, setInputValue] = useState(val);
-  const [ preRest, setPreRest ] = useState(false); // customize leave
+  const [ reservedClassName, setReservedClassName ] = useState(""); 
+  const [ reserved, setReserved ] = useState(false);
 
   useEffect(() => {
     if (reset){
+      setReserved(false)
+      setReservedClassName("")
       setInputValue(val);
-      setPreRest(false);
     }
   }, [reset, val]);
 
@@ -26,34 +29,51 @@ export default function Element({ name, val, col, reset, onChangeElement, classN
     const newValue = e.target.value;
     setInputValue(newValue);
     onChangeElement(name, col, newValue);
-
-    if (newValue === '0'){
-      console.log("edit to 0")
-      setPreRest(true);
-    }else{
-      setPreRest(false);
-    }
   };
+
+  const handleReservedRest = () => {
+    if(brushMode){
+      console.log("reserved", reserved)
+      if(reserved){
+        setReserved(false)
+        setReservedClassName("")
+      }else{
+        setReserved(true)
+        console.log(Number(inputValue) === 0)
+        if(Number(inputValue) === 0){
+          // console.log("set reserve0")
+          setReservedClassName(styles.element_reserve0)
+        }else{
+          setReservedClassName(styles.element_reserve1)
+        }
+      }
+    } 
+  }
 
 
   return (
-    <td className={className}>
-    { preRest ? 
-      <input
-      className={`${styles.element} ${styles.element_prerest}`}
-      type="text"
-      value={inputValue}
-      onChange={handleChange}
-      /> 
-    : 
-    <input
-      className={styles.element}
-      type="text"
-      value={inputValue}
-      onChange={handleChange}
-    />
-  }
-      
-    </td>
+    <>
+      {reserved ? (
+        <td className={`${className}`} onClick={handleReservedRest}>
+          <input
+            className={`${styles.element} ${reservedClassName}`}
+            type="text"
+            value={inputValue}
+            onChange={handleChange}
+            readOnly
+          /> 
+        </td>
+      ) : (
+        <td className={`${className}`} onClick={handleReservedRest}>
+          <input
+            className={`${styles.element} ${styles.elemenet_not_brush_mode}`}
+            type="text"
+            value={inputValue}
+            onChange={handleChange}
+          /> 
+        </td>
+      )}
+    </>
   );
+  
 }

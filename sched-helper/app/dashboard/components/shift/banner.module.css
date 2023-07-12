@@ -8,6 +8,11 @@
     background-color: lightgrey;
 }
 
+.icon_active_mode{
+    background-color: grey;
+}
+
+
 .icon:active{
     background-color: grey
 }

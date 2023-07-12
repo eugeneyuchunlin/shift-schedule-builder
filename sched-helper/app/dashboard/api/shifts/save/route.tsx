@@ -34,7 +34,7 @@ export async function POST(request: Request){
             $set: {
                 computation_time: body.computation_time,
                 name_list: body.name_list,
-                shift: body.shift,
+                "shifts.0": body.shift,
                 constraints: body.constraints,
                 reserved_leave: body.reserved_leave
             },

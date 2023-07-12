@@ -19,7 +19,7 @@ def add(x, y, task_group_name):
 
 @shared_task
 def solve_nsp(data, task_group_name):
-    solver = MockSolver(data) 
+    solver = DAUSolver(data) 
 
     time.sleep(1)
     async_to_sync(channel_layer.group_send)(

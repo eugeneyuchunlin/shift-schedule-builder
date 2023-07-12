@@ -145,7 +145,7 @@ export const TagsDefinition : TagProps[] = [
         ],
         evaluate: (shift: number[][], parameters: Parameters) => {
             return new Promise((resolve, reject) => {
-                let maximum_consecutive_working_days = Number(parameters['mcwd']);
+                let maximum_consecutive_working_days = Number(parameters['mcwd']) + 1;
                 let nrows = shift.length;
                 let ncols = 0;
                 if(shift.length > 0 && shift[0]){
@@ -154,13 +154,13 @@ export const TagsDefinition : TagProps[] = [
 
                 let failed = 0;
                 for(let i = 0; i < nrows; ++i){
-                    for(let j = 0; j < ncols - maximum_consecutive_working_days - 1; ++j){
-                        if(sum_range(shift[i], j, j+maximum_consecutive_working_days+1) > maximum_consecutive_working_days){
+                    for(let j = 0; j < ncols - maximum_consecutive_working_days; ++j){
+                        if(sum_range(shift[i], j, j+maximum_consecutive_working_days) >= maximum_consecutive_working_days){
                             failed += 1;
                         }
                     }
                 }
-                // console.log("maximum consecutive working days", failed, ncols, nrows)
+                console.log("maximum consecutive working days", failed, ncols, nrows)
                 resolve(1 - (failed / (nrows * (ncols - maximum_consecutive_working_days))))
             })
 

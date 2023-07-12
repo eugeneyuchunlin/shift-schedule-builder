@@ -30,7 +30,9 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
                 constraint.parameters = { ...constraint.parameters, reserved_leave: reservedLeave }
             }
             if (tag) {
-              constraints_score[tag.text] = await tag.evaluate(shift, constraint.parameters);
+              constraints_score[tag.text] = {}
+                constraints_score[tag.text]['score'] = await tag.evaluate(shift, constraint.parameters);
+                constraints_score[tag.text]['weight'] = Number(constraint.parameters['weight']);
             }
           });
       
@@ -47,11 +49,13 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
     useEffect(() => {
         if (scores) {
             let total_scores = 0;
-            for (const [key, value] of Object.entries(scores)) {
-                total_scores += Number(value);
+            let total_weight = 0;
+            for (const [key, value] of Object.entries<{weight: number, score: number}>(scores)) {
+                total_weight += value['weight']
+                total_scores += value['score'] * value['weight']
             }
             // the overall score should be weighted
-            total_scores /= Object.keys(scores).length > 0 ? Object.keys(scores).length : 1;
+            total_scores /= total_weight > 0 ? total_weight: (Object.keys(scores).length > 0 ? Object.keys(scores).length  : 1);
             setOverallScore(total_scores);
         }
     }, [scores])
@@ -97,7 +101,7 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
                                                 <p>{key}</p>
                                             </Col>
                                             <Col sm={3} key={`${uniqueKey}-col2`}>
-                                                <p>{(100 * Number(value)).toFixed(2)}%</p>
+                                                <p>{(100 * Number(value['score'])).toFixed(2)}%</p>
                                             </Col>
                                         </Row>
                                     );

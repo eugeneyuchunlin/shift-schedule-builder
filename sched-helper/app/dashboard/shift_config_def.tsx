@@ -1,7 +1,7 @@
 
 export interface Constraint{
     name : string;
-    parameters: {};
+    parameters: { [key: string]: string; };
 }
 
 export interface ShiftConfig {

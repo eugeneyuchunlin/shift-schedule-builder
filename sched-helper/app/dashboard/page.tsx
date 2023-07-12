@@ -84,7 +84,7 @@ export default function Page() {
                 };
 
                 if (data) {
-                    console.log(data)
+                    // console.log(data)
                     const shift0 = data.shifts[0];
 
                     newContent.number_of_workers = shift0.length;
@@ -222,15 +222,8 @@ export default function Page() {
 
     useEffect(() => {
         if (shiftContent.shift_id !== shiftConfig.shift_id) {
-            loadShiftContent()
-                .then((newContent) => {
-                    // console.log(newContent)
-                    setShiftContent(newContent);
-                    setUpdateContentFlag(!updateContentFlag);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            console.log("shift id changed, reload")
+            reloadShiftContent();
         }
     }, [shiftConfig.shift_id]);
 

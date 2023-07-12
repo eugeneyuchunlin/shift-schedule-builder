@@ -278,7 +278,7 @@ export const TagsDefinition : TagProps[] = [
                         }
                     }
                 }
-                console.log(failed)
+                // console.log(failed)
                 resolve(amount_of_leave === 0 ? 1 : 1 - (failed / amount_of_leave));
             })
         }

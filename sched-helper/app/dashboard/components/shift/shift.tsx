@@ -47,6 +47,7 @@ export default function Shift({reset, brushMode, updateShiftContentElement }: Sh
                   <tr key={index}>
                     <Element
                       name={shiftContent.content[index].name}
+                      row={index}
                       col={-1}
                       key={index}
                       className={styles.headcol}
@@ -58,6 +59,7 @@ export default function Shift({reset, brushMode, updateShiftContentElement }: Sh
                     {Array.from({ length: shiftContent.days }).map((_, index2) => (
                       <Element
                         name={shiftContent.content[index].name}
+                        row={index}
                         col={index2}
                         key={index2}
                         val={shiftArray[index2]}

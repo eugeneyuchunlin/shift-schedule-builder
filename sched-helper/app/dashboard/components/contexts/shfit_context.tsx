@@ -6,11 +6,34 @@ import { ShiftContent } from '../shift/shift';
 export const ShiftContext = createContext({} as any);
 
 export const ShiftProvider = (
-    {children, shiftConfig, shiftContent, updateContentFlag}: 
-    {children: any, shiftConfig: ShiftConfig, shiftContent: ShiftContent, updateContentFlag: boolean}
+    {
+        children, 
+        shiftConfig, 
+        shiftContent, 
+        updateContentFlag,
+        reservedLeave,
+        reservedWD,
+        updateReservedFlag
+    }: 
+    {
+        children: any, 
+        shiftConfig: ShiftConfig, 
+        shiftContent: ShiftContent, 
+        updateContentFlag: boolean,
+        reservedLeave: {},
+        reservedWD: {}
+        updateReservedFlag: boolean
+    }
 ) => {
     return (
-        <ShiftContext.Provider value={ {shiftContent, shiftConfig, updateContentFlag} }>
+        <ShiftContext.Provider value={{
+                shiftContent, 
+                shiftConfig, 
+                updateContentFlag, 
+                reservedLeave,
+                reservedWD,
+                updateReservedFlag
+        }}>
             {children}
         </ShiftContext.Provider>
     )

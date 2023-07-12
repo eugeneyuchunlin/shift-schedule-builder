@@ -26,7 +26,6 @@ export default function ShiftConfiguration(
 
     const handleDaysChange = (e: ChangeEvent<HTMLInputElement>) => {
         setDays(Number(e.target.value))
-        console.log("days", e.target.value)
         onShiftConfigChange({ days: Number(e.target.value) })
     }
 
@@ -42,11 +41,11 @@ export default function ShiftConfiguration(
 
     useEffect(() => {
         if (shiftConfig) {
-            console.log("shift config is ready")
+            // console.log("shift config is ready")
             setDays(shiftConfig.days);
             setNumberOfWorkers(shiftConfig.number_of_workers);
             setComputationTime(shiftConfig.computation_time);
-            console.log(shiftConfig)
+            // console.log(shiftConfig)
         }
     }, [shiftConfig]);
 

@@ -16,6 +16,9 @@ export default function Page() {
     const [shiftContent, setShiftContent] = useState({} as ShiftContent)
     const [reset, setReset] = useState(false)
     const [updateContentFlag, setUpdateContentFlag] = useState(false)
+    const [reservedLeave, setReservedLeave] = useState({} as {[key: string]: number[]}) // reserved Leave
+    const [reservedWD, setReservedWD] = useState({} as {[key: string]: number[]}) // reserved Working Days
+    const [updateReservedFlag, setUpdateReservedFlag] = useState(false)
 
     const handleAddingConstraint = (constraint: Constraint): void => {
         setShiftConfig((prevConfig) => {
@@ -93,6 +96,9 @@ export default function Page() {
                         computation_time: data['compute_time'],
                         constraints: data['constraints']
                     })
+                    // FIXME: days_off_index -> reserved_leave
+                    setReservedLeave(data['days_off_index'])
+                    console.log("reload reserved leave")
 
                     for (let i = 0; i < newContent.number_of_workers; i++) {
                         newContent.content.push({
@@ -143,6 +149,7 @@ export default function Page() {
     const reloadShiftContent = async () => {
         const originalContent = await loadShiftContent();
         resetShiftContennt(originalContent);
+        setUpdateReservedFlag(!updateReservedFlag);
     }
 
     useEffect(() => {
@@ -192,16 +199,16 @@ export default function Page() {
       
 
     useEffect(() => {
-        console.log("Number of workers: " + shiftConfig.number_of_workers)
-        console.log("Days: " + shiftConfig.days)
+        // console.log("Number of workers: " + shiftConfig.number_of_workers)
+        // console.log("Days: " + shiftConfig.days)
         const updatedContent = { ...shiftContent };
         updatedContent.number_of_workers = shiftConfig.number_of_workers;
         updatedContent.days = shiftConfig.days;
 
-        console.log("rescale the shift content")
+        // console.log("rescale the shift content")
         rescaleShiftContent(updatedContent)
         .then((updatedContent: ShiftContent) => {
-          console.log("rescale done");
+        //   console.log("rescale done");
           setShiftContent(updatedContent);
           setUpdateContentFlag(!updateContentFlag);
         })
@@ -233,7 +240,14 @@ export default function Page() {
             <Container fluid id={styles.main_container}>
                 <Row id={styles.main_view}>
                     <Col sm={8}>
-                        <ShiftProvider shiftContent={shiftContent} shiftConfig={shiftConfig} updateContentFlag={updateContentFlag}>
+                        <ShiftProvider 
+                            shiftContent={shiftContent} 
+                            shiftConfig={shiftConfig} 
+                            updateContentFlag={updateContentFlag}
+                            reservedLeave={reservedLeave}
+                            reservedWD={reservedWD}
+                            updateReservedFlag={updateReservedFlag}
+                        >
                             <ShiftView 
                                 reset={reset}
                                 reloadShiftContent={reloadShiftContent} 
@@ -244,7 +258,14 @@ export default function Page() {
                         
                     </Col>
                     <Col>
-                        <ShiftProvider shiftContent={shiftContent} shiftConfig={shiftConfig} updateContentFlag={updateContentFlag}>
+                        <ShiftProvider 
+                            shiftContent={shiftContent} 
+                            shiftConfig={shiftConfig} 
+                            updateContentFlag={updateContentFlag}
+                            reservedLeave={reservedLeave}
+                            reservedWD={reservedWD}
+                            updateReservedFlag={updateReservedFlag}
+                        >
                             <ShiftConfiguration 
                                 onShiftConfigChange={handleShiftConfigChange} 
                                 onAddingShiftConstraint={handleAddingConstraint} 

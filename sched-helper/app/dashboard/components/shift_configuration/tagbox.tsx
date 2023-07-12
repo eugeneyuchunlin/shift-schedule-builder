@@ -12,6 +12,7 @@ export default function TagBox({onAddingShiftConstraint, onRemovingConstraint} :
             <div className={styles.tagList}>
                 {TagsDefinition.map((tag, index) => (
                     <Tag 
+                        
                         key={index} 
                         props={tag} 
                         onAddingShiftConstraint={onAddingShiftConstraint} 

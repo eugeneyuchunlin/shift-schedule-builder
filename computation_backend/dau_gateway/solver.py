@@ -396,10 +396,11 @@ class MockSolver(DAUSolver):
 
     def __init__(self, problem):
         with open("data.json", "r") as file:
-            problem = json.load(file)
-        super().__init__(problem)
+            prepared_problem = json.load(file)
+        super().__init__(prepared_problem)
 
     def solve(self):
+        print(self._computation_time)
         time.sleep(self._computation_time)
         with open('solution.json', 'r') as f:
             solution = json.load(f)

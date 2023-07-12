@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState, useContext } from 'react';
 import styles from './tag.module.css';
 import Image from 'next/image';
-import { Modal, Button, Form, Row, Col, Tooltip, OverlayTrigger} from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { TagProps } from './tags_definition';
 import { Constraint } from '../../shift_config_def';
 import { ShiftContext } from '../contexts/shfit_context';
@@ -13,7 +13,7 @@ export default function Tag({
 }: {
     props: TagProps;
     onAddingShiftConstraint: (constraint: Constraint) => void;
-    onRemovingShiftConstraint: (constraint_name: string) => void; 
+    onRemovingShiftConstraint: (constraint_name: string) => void;
 }) {
     const { shiftConfig, shiftContent } = useContext(ShiftContext)
 
@@ -50,54 +50,54 @@ export default function Tag({
         }));
     };
 
-    useEffect(()=>{
-        if (shiftConfig.constraints){
-            const constraint = shiftConfig.constraints.find((constraint: Constraint)=>constraint.name === props.key);
-            if (constraint){
+    useEffect(() => {
+        if (shiftConfig.constraints) {
+            const constraint = shiftConfig.constraints.find((constraint: Constraint) => constraint.name === props.key);
+            if (constraint) {
                 setAdded(true);
                 setFormValues(constraint.parameters);
             }
         }
     }, [shiftConfig])
 
-    const tooltip = (
-        <Tooltip>
-          {Object.entries(formValues).length > 0 ? (
-            <span>
-              Parameters: <br />
-              {Object.entries(formValues).map(([key, value]) => (
-                <span key={key}>
-                  {key}: {value}
-                    <br />
-                </span> 
-              ))}
-            </span>
-          ) : (
-            <span>Click to set your parameters</span>
-          )}
-        </Tooltip>
-      );
-      
+    const tooltipContent = Object.entries(formValues).length > 0 ? (
+        <span>
+            Parameters: <br />
+            {
+                Object.entries(formValues).map(([key, value], index) => (
+                    key !== 'reserved_leave' ? (
+                        <span key={index}>
+                            {key}: {value}
+                            <br />
+                        </span>
+                    ) : null
+                ))
+            }
+        </span>
+    ) : (
+        <span>Click to set your parameters</span>
+    );
 
+    const tooltip = <Tooltip id={`tooltip-${props.text}`}>{tooltipContent}</Tooltip>;
     return (
         <>
-        <OverlayTrigger placement="top" delay={{ show: 250, hide: 150 }} overlay={tooltip}>
-            {added ? (
-                <div className={`${styles.tag} ${styles.tag_chosen}`} onClick={handleClick}>
-                    <span className={styles.text}>{props.text}</span>
-                    <button className={styles.button}>
-                        <>&#x2715;</>
-                    </button>
-                </div>
-            ) : (
-                <div className={styles.tag} onClick={handleClick}>
-                    <span className={styles.text}>{props.text}</span>
-                    <button className={styles.button}>
-                        <Image src="/add.svg" width={10} height={10} alt="add" />
-                    </button>
-                </div>
-            )}
-        </OverlayTrigger>
+            <OverlayTrigger placement="top" delay={{ show: 250, hide: 150 }} overlay={tooltip}>
+                {added ? (
+                    <div className={`${styles.tag} ${styles.tag_chosen}`} onClick={handleClick}>
+                        <span className={styles.text}>{props.text}</span>
+                        <button className={styles.button}>
+                            <>&#x2715;</>
+                        </button>
+                    </div>
+                ) : (
+                    <div className={styles.tag} onClick={handleClick}>
+                        <span className={styles.text}>{props.text}</span>
+                        <button className={styles.button}>
+                            <Image src="/add.svg" width={10} height={10} alt="add" />
+                        </button>
+                    </div>
+                )}
+            </OverlayTrigger>
 
             <Modal show={show} size="lg" onHide={handleClose}>
                 <Modal.Header closeButton>

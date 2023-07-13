@@ -263,7 +263,7 @@ export const TagsDefinition : TagProps[] = [
                     all_consecutive_shift_pair += [...row.matchAll(consecutive_leave_re)].length
                     all_leave += [...row.matchAll(leave_re)].length
                 }
-                resolve(all_consecutive_shift_pair / all_leave)
+                resolve(all_leave > 0 ? all_consecutive_shift_pair / all_leave : 0)
             })
         }
     },

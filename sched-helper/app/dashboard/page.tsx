@@ -228,8 +228,12 @@ export default function Page() {
     }
 
     useEffect(() => {
-        if (shiftContent.shift_id !== shiftConfig.shift_id) {
+        if (shiftContent.shift_id !== shiftConfig.shift_id && shiftConfig.shift_id && shiftConfig.shift_id !== "") {
             reloadShiftContent();
+        }else if(shiftConfig.shift_id === ""){
+            setShiftContent({} as ShiftContent);
+            setShiftConfig({} as ShiftConfig);
+            setUpdateContentFlag(!updateContentFlag);
         }
     }, [shiftConfig.shift_id]);
 

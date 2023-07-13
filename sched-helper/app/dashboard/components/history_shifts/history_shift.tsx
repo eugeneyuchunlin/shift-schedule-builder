@@ -57,6 +57,31 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_nam
     }
   };
 
+  const deleteShift = async (id: string) => {
+      try{
+        const res = await fetch('/dashboard/api/shifts/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({shift_id: id}),
+        });
+        const json = await res.json();
+        console.log(json);
+
+        const newShiftsList = shifts.filter((shift) => shift.id !== id);
+        setShifts(newShiftsList);
+        if(newShiftsList.length > 0){
+          onSelectShift(newShiftsList[newShiftsList.length - 1].name, newShiftsList[newShiftsList.length - 1].id);
+        }else{
+          onSelectShift("", "");
+        }
+
+      }catch(err){
+        console.log(err);
+      }
+  }
+
   const saveShiftName = async (id: string, name: string) => {
     try{
       const res = await fetch('/dashboard/api/shifts/rename', {
@@ -83,6 +108,8 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_nam
     await saveShiftName(id, name);
     setShifts(newShiftsList);
   };
+
+
   
 
   return (
@@ -108,6 +135,7 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_nam
                 name={shift.name} 
                 onSelectShift={(name:string, shift_id:string) => {onSelectShift(name, shift_id), setShow(false)}}
                 onRenameShift={updateShiftName}
+                onDeleteShift={deleteShift}
               />
             ))}
           </Container>

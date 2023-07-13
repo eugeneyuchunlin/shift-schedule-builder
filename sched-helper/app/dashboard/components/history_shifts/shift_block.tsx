@@ -11,11 +11,13 @@ export default function ShiftBlock(
     shift_id, 
     onSelectShift,
     onRenameShift,
+    onDeleteShift,
   }: {
     name: string, 
     shift_id: string, 
     onSelectShift: (shift_name: string, shift_id: string)=>void,
     onRenameShift: (shift_id: string, name: string)=>void
+    onDeleteShift: (shift_id: string)=>void
   }
 ) {
   const [isEdit, setIsEdit] = useState(false);
@@ -56,6 +58,7 @@ export default function ShiftBlock(
   const deleteShift = () =>{
     // console.log("delete");
     setIsDelete(true); 
+    onDeleteShift(shift_id);
   }
 
   const handleChooseShift = () => {

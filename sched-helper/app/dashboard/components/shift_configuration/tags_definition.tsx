@@ -47,7 +47,7 @@ export const TagsDefinition : TagProps[] = [
     {
         text: 'Expected number of working days',
         key: 'expected_working_days',
-        description: `The number of working days that the employee is expected to work in a month`,
+        description: `The number of working days that the employee is expected to work in a month.`,
         parameters: [
             {
                 parameter_name: 'Expected number of working days',
@@ -74,7 +74,8 @@ export const TagsDefinition : TagProps[] = [
     {
         text: 'Customize leave',
         key: 'customize_leave',
-        description: `You are able to customize the leave for each employee, please edit the shift for each employee`,
+        description: `You are able to customize the leave for each employee, please edit the shift for each employee. 
+                      1 is denoted as a working day, 0 is denoted as a leave day.`,
         parameters: [],
         evaluate: (shift: number[][], parameters: Parameters) => {
             return new Promise((resolve, reject) => {
@@ -101,7 +102,7 @@ export const TagsDefinition : TagProps[] = [
     {
         text: 'Expected number of workers per shift',
         key: 'expected_number_of_workers_per_shift',
-        description: `The number of workers that the employee is expected to work in a shift`,
+        description: `The number of workers that are expected to work in a shift.`,
         parameters: [
             {
                 parameter_name: 'Expected number of workers per shift',
@@ -135,7 +136,9 @@ export const TagsDefinition : TagProps[] = [
     {
         text: 'Maximum consecutive working days',
         key: 'maximum_consecutive_working_days',
-        description: `The maximum number of consecutive working days that the employee is expected to work`,
+        description: `The maximum number of consecutive working days. 
+        For example, set the maximum consecutive working days is 5. 
+        The algorithm would try to avoid arranging the employee to work for more than 5 consecutive days.`,
         parameters: [
             {
                 parameter_name: 'Maximum consecutive working days',
@@ -169,7 +172,8 @@ export const TagsDefinition : TagProps[] = [
     {
         text: 'Minimum n-days leave within 7-days',
         key: 'minimum_n_days_leave_within_7_days',
-        description: `The minimum number of days that the employee is expected to take leave within 7 days`,
+        description: `The minimum number of days that the employee is expected to take leave within 7 days.
+        For example, set the minimum n-days leave within 7-days is 2. The employee would have at least 2 leave days within 7 days.`,
         parameters: [
             {
                 parameter_name: 'Minimum n-days leave within 7-days',
@@ -215,7 +219,7 @@ export const TagsDefinition : TagProps[] = [
     {
         text: 'Successive shift pair',
         key: 'successive_shift_pair',
-        description: `The number of successive shift pair that the employee is expected to work`,
+        description: `The successive shift pair constraint is for the employee who likes to work on consecutive days`,
         parameters: [],
         evaluate: (shift: number[][], parameters: {}) => {
             return new Promise((resolve, reject) => {
@@ -241,9 +245,9 @@ export const TagsDefinition : TagProps[] = [
         }
     },
     {
-        text: 'Consecutive 2 days leave',
+        text: 'Consecutive leave',
         key: 'consecutive_2_days_leave',
-        description: `The number of consecutive 2 days leave that the employee is expected to take`,
+        description: `The algorithm would try to arrange the employee to take consecutive days leave.`,
         parameters: [],
         evaluate: (shift: number[][], parameters: {}) => {
             return new Promise((resolve, reject) => {
@@ -268,9 +272,9 @@ export const TagsDefinition : TagProps[] = [
         }
     },
     {
-        text: 'No leave on consecutive working days',
+        text: 'No consecutive leave',
         key: 'no_consecutive_leave',
-        description: `The employee is not allowed to take leave on consecutive working days`,
+        description: `The shift would try not to arange the employee to take consecutive leave days. `,
         parameters: [],
         evaluate: (shift: number[][], parameters: {}) => {
             return new Promise((resolve, reject) => {

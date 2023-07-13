@@ -13,7 +13,7 @@ try:
     dma_url = settings.DMA_URL
     api_key = settings.DAU_API_KEY
     dma_api_key = settings.DMA_API_KEY
-    MONGODB_URL = settings.MONGODB_URL
+    MONGODB_URI = settings.MONGODB_URI
 except:
     import yaml
 
@@ -24,7 +24,7 @@ except:
     dma_url = config['DMA_URL']
     api_key = config['DAU_API_KEY']
     dma_api_key = config['DMA_API_KEY']
-    MONGODB_URL = config['MONGODB_URL']
+    MONGODB_URI = config['MONGODB_URI']
     pass
 
 try:
@@ -33,7 +33,7 @@ except:
     from pymongo.mongo_client import MongoClient
     from pymongo.server_api import ServerApi
 
-    db_client = MongoClient(MONGODB_URL, server_api=ServerApi('1'))
+    db_client = MongoClient(MONGODB_URI, server_api=ServerApi('1'))
     try:
         db_client.admin.command('ping')
         print('MongoDB connected')

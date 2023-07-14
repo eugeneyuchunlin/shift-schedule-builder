@@ -91,7 +91,7 @@ export default function Score({ shift_id, index }: { shift_id: string, index: nu
                 <Row>
                     <Col>
                         <Container fluid>
-                            {scores && Object.entries(scores).map(([key, value], index) => {
+                            {scores && Object.entries<{weight: number, score: number}>(scores).map(([key, value], index) => {
                                 if (key !== 'overall_score') {
                                     const uniqueKey = `${key}-${index}`; // Generate a unique key
 

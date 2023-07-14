@@ -177,11 +177,11 @@ export default function Banner(
                 setFixedMode(!brushMode);
             },
         },
-        {
-            src: "/download.svg",
-            alt: "Download",
-            onClick: () => { },
-        },
+        // {
+        //     src: "/download.svg",
+        //     alt: "Download",
+        //     onClick: () => { },
+        // },
         {
             src: "/save.svg",
             alt: "Save",
@@ -198,14 +198,14 @@ export default function Banner(
                         {shiftConfig.name}
                     </Navbar.Brand>
                     {running ? <>
-                        <Col sm={3}>
+                        <Col sm={4}>
                             {/* <ProgressBar totalDuration={1000} completed={completed} /> */}
                         </Col>
                         <Col sm={3}>
                             Status : {status}
                         </Col>
                     </> : <>
-                        <Col sm={6}></Col>
+                        <Col sm={7}></Col>
                     </>}
 
                     {Utitlities.map((utility, index) => (

@@ -60,16 +60,14 @@ To be simple, the mathematical formulation separate the boundary situations, `(0
 This is a soft constraint for days off preference. When this constraint is employed, the algorithm would try to arrage the days off together.
 
 The mathematical formualtion is as follow:
-$$
-H = \sum_{i}^N\sum_{j}^{D-1}\left(1-x_{i,j} * x_{i,j+1}\right).
+$$H = \sum_{i}^N\sum_{j}^{D-1}\left(1-x_{i,j} * x_{i,j+1}\right).
 $$
 
 ### No Consecutive 2 Days Leave
 
 This constraint is an opposite version of the above constraint. The mathematical formulation is as follow:
 
-$$
-H = \sum_{i}^N\sum_{j}^{D-1}\left[(1-x_{i,j}) * (1 - x_{i,j+1})\right].
+$$H = \sum_{i}^N\sum_{j}^{D-1}\left[(1-x_{i,j}) * (1 - x_{i,j+1})\right].
 $$
 
 ### Shift Preference

@@ -33,9 +33,8 @@ In the current version [v0.2](https://github.com/yuchun1214/shift-schedule-build
 
 This requirement could be added to define the number of working days in the shift range. Workers in the shift are expected to have equal working days. The mathematical formulation for $N$ workers and $D$ days shift is as follow:
 
-\begin{equation}
-H = \sum_{i}^{N} \left( \sum_{j}^{D}x_{ij} - \alpha \right)^2,
-\end{equation}
+$$H = \sum_{i}^{N} \left( \sum_{j}^{D}x_{ij} - \alpha \right)^2,
+$$
 
 where $\alpha$ is the expected number of working days, and $H$ is the hamiltonian.
 
@@ -43,9 +42,8 @@ where $\alpha$ is the expected number of working days, and $H$ is the hamiltonia
 
 The following constraint defines the expected number of workers in each shift. This constraint is common and used to balance the workforce and the workload on each day. The constraint is modeled by summing up the variables on each shift and minus the expected number of workers and, finally, double themselves and make them quadratic. The mathematical formulation is as follow:(The situation is as the same as the used above)
 
-\begin{equation}
-H = \sum_{j}^{D}\left( \sum_{i}^{N} - \beta\right)^2,
-\end{equation}
+$$H = \sum_{j}^{D}\left( \sum_{i}^{N} - \beta\right)^2,
+$$
 
 where $\beta$ is the expected number of workers each shift.
 
@@ -62,30 +60,28 @@ To be simple, the mathematical formulation separate the boundary situations, `(0
 This is a soft constraint for days off preference. When this constraint is employed, the algorithm would try to arrage the days off together.
 
 The mathematical formualtion is as follow:
-\begin{equation}
+$$
 H = \sum_{i}^N\sum_{j}^{D-1}\left(1-x_{i,j} * x_{i,j+1}\right).
-\end{equation}
+$$
 
 ### No Consecutive 2 Days Leave
 
 This constraint is an opposite version of the above constraint. The mathematical formulation is as follow:
 
-\begin{equation}
+$$
 H = \sum_{i}^N\sum_{j}^{D-1}\left[(1-x_{i,j}) * (1 - x_{i,j+1})\right].
-\end{equation}
+$$
 
 ### Shift Preference
 
 Workers are able to setup their shift preference. They can designate which day they want to take a day off or which day they want to work. The algorithm would try to fulfill each worker's requirement.
 
 The mathematical formulation is as follow:
-\begin{equation}
+$$
 H = \sum_{i}^N\sum_{j}^Dx_{ij}-q_{ij}
-\end{equation}
+$$
 
-:::info
-Days off preference is now avaliable in v0.2, and working days preference will be avaliable in v0.3.
-:::
+*Days off preference is now avaliable in v0.2, and working days preference will be avaliable in v0.3.*
 
 
 ### The Maximum Consecutive Shifts
@@ -98,9 +94,7 @@ The digital annealer computation service offers users to post the inequality. Pl
 
 The inequalities would be a array and append the following inequality.
 
-\begin{equation}
-\sum_{j}^{j+\gamma + 1}x_{ij} \leq \gamma, \   \forall i\in[1, N],\  j\in [1, D-\gamma - 1]
-\end{equation}
+$$\sum_{j}^{j+\gamma + 1}x_{ij} \leq \gamma, \   \forall i\in[1, N],\  j\in [1, D-\gamma - 1]$$
 
 where $\gamma$ is the maximum consecutive shifts
 
@@ -108,9 +102,7 @@ where $\gamma$ is the maximum consecutive shifts
 
 The constraint is for employees' days off welfare. The employees working in graveyard shifts needs to have days off in a range.
 
-:::warning
-This constraint is now avaliable in v0.2, but it would be overhauled in the future.
-:::
+*This constraint is now avaliable in v0.2, but it would be overhauled in the future.*
 
 ## Execute
 

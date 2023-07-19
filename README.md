@@ -1,12 +1,9 @@
 # Shift Schedule Builder
 
-[![hackmd-github-sync-badge](https://hackmd.io/WigtZ51sSq-DyeZYtBJAgQ/badge)](https://hackmd.io/WigtZ51sSq-DyeZYtBJAgQ)
-
-
 ## Introduction
 
 The Shift Schedule Builder is a web application designed to simplify the task of shift arrangement for users. Its primary aim is to provide a user-friendly interface that allows users to input their shift requirements and configurations easily, such as the number of workers and the number of days.
-![](https://hackmd.io/_uploads/BJ4FNOf5n.gif)
+![](https://github.com/yuchun1214/shift-schedule-builder/blob/main/docs/images/shift-configuration.gif)
 
 
 In addition to basic shift parameters, users are able to add some shift requirements. The application will automatically generate a schedule for them based on the given data and constraints. For example, user are able to set the expected number of workers per shifts to 8. Then the algorithm would take this constraint into account when you press the `Run` button.
@@ -14,7 +11,7 @@ In addition to basic shift parameters, users are able to add some shift requirem
 
 The application shows the weighted quality score in real time based on your current shift and requirements. If the shift is modified and the requirement is fulfilled parlty, the quality score would increase to some extent, vice versa. For example, when the user adds a requirement, the expected number of workers per shift, and set the parameter to 8 and the weight to 5. The shift is modified and add some days off to satisfy the requirements. The quality score increases.
 
-![](https://hackmd.io/_uploads/BJ11bKGc2.gif)
+![](https://github.com/yuchun1214/shift-schedule-builder/blob/main/docs/images/shift-score.gif)
 
 The utility bar offers multiple functions. They could be used to calculate, reload, reset, customize leave, and most importantly, save. The functions of the utility bar could be extended. If you have any new idea, please write it precisely on the repo's issues page of the repo, and I'll take it into account in the next version.
 

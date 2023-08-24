@@ -23,6 +23,7 @@ export default function ShiftConfiguration(
     const [days, setDays] = useState(0)
     const [number_of_workers, setNumberOfWorkers] = useState(0)
     const [computation_time, setComputationTime] = useState(0)
+    const [algorithm, setAlgorithm] = useState(-1)
 
     const handleDaysChange = (e: ChangeEvent<HTMLInputElement>) => {
         setDays(Number(e.target.value))
@@ -39,13 +40,19 @@ export default function ShiftConfiguration(
         onShiftConfigChange({ computation_time: Number(e.target.value) })
     }
 
+    const handleAlgorithmChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        onShiftConfigChange({ algorithm: Number(e.target.value) })
+        console.log("shift config change");
+        console.log(shiftConfig);
+    }
+
     useEffect(() => {
         if (shiftConfig) {
             // console.log("shift config is ready")
             setDays(shiftConfig.days);
             setNumberOfWorkers(shiftConfig.number_of_workers);
             setComputationTime(shiftConfig.computation_time);
-            // console.log(shiftConfig)
+            setAlgorithm(shiftConfig.algorithm);
         }
     }, [shiftConfig]);
 
@@ -92,7 +99,6 @@ export default function ShiftConfiguration(
                             </Col>
                         </Row>
                         <Row className={styles.rows}>
-
                             <Col>
                                 <FloatingLabel controlId="floatingInputGrid" label="Computation Time(sec)">
                                     <Form.Control
@@ -103,6 +109,19 @@ export default function ShiftConfiguration(
                                         onChange={handleComputationTimeChange}
                                     />
                                 </FloatingLabel>
+                            </Col>
+                        </Row>
+                        <Row className={styles.rows}>
+                            <Col>
+                                <Form.Select 
+                                    aria-label="algorithms" 
+                                    onChange={handleAlgorithmChange} 
+                                    value={algorithm}
+                                >
+                                    <option value="-1">Choose An Algorithm</option>
+                                    <option value="0">Simulated Algorithm</option>
+                                    <option value="1" disabled>Digital Annealer</option>
+                                </Form.Select>
                             </Col>
                         </Row>
                     </div>

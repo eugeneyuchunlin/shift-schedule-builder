@@ -15,6 +15,7 @@ const schema = z.object({
     shift: z.array(z.array(z.string())),
     constraints: z.array(constraintSchema),
     reserved_leave: z.record(z.array(z.number())),
+    algorithm: z.number()
 })
 
 export async function POST(request: Request){
@@ -36,7 +37,8 @@ export async function POST(request: Request){
                 name_list: body.name_list,
                 "shifts.0": body.shift,
                 constraints: body.constraints,
-                reserved_leave: body.reserved_leave
+                reserved_leave: body.reserved_leave,
+                algorithm: body.algorithm
             },
         };
         const option = {

@@ -12,6 +12,7 @@ function AlertBlock({ show, handleClose}: { show: boolean, handleClose: () => vo
       <Alert variant="danger" className={styles.alert_box} onClose={handleClose} dismissible>
         <Alert.Heading>Oh no! You got an error!</Alert.Heading>
         <p>You must provide days, number of workers, computation time, and at least one constraint.</p>
+        <p>Most importantly, choose an algorithm.</p>
       </Alert>
     );
   }

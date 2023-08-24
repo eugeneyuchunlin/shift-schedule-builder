@@ -83,6 +83,10 @@ export default function Banner(
             valid = false;
         }
 
+        if( !shiftConfig.algorithm || shiftConfig.algorithm < 0){
+            valid = false;
+        }
+
         if (valid) {
             setRunning(true);
             // prepare the data
@@ -93,7 +97,8 @@ export default function Banner(
                 computation_time: shiftConfig.computation_time,
                 constraints: shiftConfig.constraints,
                 content: shiftContent.content,
-                reserved_leave: reservedLeave
+                reserved_leave: reservedLeave,
+                algorithm: shiftConfig.algorithm
             }
             if (taskSocketRef.current) {
                 console.log(data)
@@ -133,7 +138,8 @@ export default function Banner(
             name_list: name_list,
             shift: shift_array_list,
             constraints: constraints,
-            reserved_leave: reservedLeave
+            reserved_leave: reservedLeave,
+            algorithm: shiftConfig.algorithm
         }
         console.log(data)
 

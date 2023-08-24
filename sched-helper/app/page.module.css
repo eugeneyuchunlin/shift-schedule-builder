@@ -1,0 +1,22 @@
+.main_container{
+    height: 100vh;
+    /* background-image: url('/background.jpg'); */
+    /* opacity: 0.8; */
+    /* background-position: center; */
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
+}
+
+.form_col{
+    height: 100vh;
+}
+
+.jumbotron{
+    margin-left: 10rem;
+    margin-top: 10rem;
+}
+
+.subtitle{
+    font-weight: 500;
+}
+

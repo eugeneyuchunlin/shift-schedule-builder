@@ -1,0 +1,27 @@
+.form_body{
+    background-color: white;
+    margin-top: 10%;
+    /* opacity: 1; */
+    color: black;
+
+    padding: 1rem .5rem .5rem .5rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.or{
+    margin: 1rem .5rem .5rem .5rem;
+    color: #333;
+}
+
+
+.auth_block{
+    width: 100%;
+}
+
+.third_party_icon{
+    margin-right: 1rem;
+}
+
+.third_party_section{
+    margin-top: 1rem;
+}

@@ -131,10 +131,10 @@ DAU_API_KEY="<your Fujitsu digital annealing unit computation service API key>"
 DAU_URL="https://api.aispf.global.fujitsu.com"
 
 # Use MongoDB altas Database
-# MONGODB_URL="mongodb+srv://<username>:<password>@shift-helper.twhfqvg.mongodb.net/?retryWrites=true&w=majority"
+# MONGODB_URI="mongodb+srv://<username>:<password>@shift-helper.twhfqvg.mongodb.net/?retryWrites=true&w=majority"
 
 # Use MongoDB on your localhost
-MONGODB_URL="mongodb://<username>:<password>@localhost:27017/?w=majority"
+MONGODB_URI="mongodb://<username>:<password>@localhost:27017/?w=majority"
 ```
 
 #### Frontend

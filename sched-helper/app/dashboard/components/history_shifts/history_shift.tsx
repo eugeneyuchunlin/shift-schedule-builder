@@ -7,8 +7,10 @@ import ShiftBlock from './shift_block';
 import styles from './history_shift.module.css';
 import { StringMappingType } from 'typescript';
 
-export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_name: string, shift_id: string) => void}) {
+export default function HistoryShifts(
+  {onSelectShift}:{onSelectShift: (shift_name: string, shift_id: string) => void}) {
   const [show, setShow] = useState(false);
+
 
   useEffect(() => {
     // load shifts
@@ -114,7 +116,8 @@ export default function HistoryShifts({onSelectShift}:{onSelectShift: (shift_nam
 
   return (
     <>
-      <Navbar items={[<Nav.Link key={1} onClick={() => setShow(true)}>Your Shifts</Nav.Link>]}>
+      
+      <Navbar offcanvas={[<Nav.Link key={1} onClick={() => setShow(true)}>Your Shifts</Nav.Link>]}>
       </Navbar>
 
       <Offcanvas show={show} onHide={() => setShow(false)}>

@@ -59,7 +59,7 @@ export default function ShiftConfiguration(
                             <h6>Score</h6>
                         </Row>
                         <Row className={styles.rows}>
-                            <Score shift_id='9c87a528-44f8-439e-aea3-c4c68dda2bdc' index={0} />
+                            <Score/> 
                         </Row>
                     </div>
                 </Row>
@@ -108,7 +108,7 @@ export default function ShiftConfiguration(
                     </div>
                     <div className={styles.section}>
                         <Row className={`${styles.rows} ${styles.divider}`}>
-                            <h6>Constraints</h6>
+                            <h6>Shift Requirements</h6>
                         </Row>
                         <Row className={styles.rows}>
                             <Col>

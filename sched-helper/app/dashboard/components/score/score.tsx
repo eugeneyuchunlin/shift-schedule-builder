@@ -10,7 +10,7 @@ import { set } from 'zod';
 import { TagsDefinition } from '../shift_configuration/tags_definition';
 import { Constraint } from '../../shift_config_def';
 
-export default function Score({ shift_id, index }: { shift_id: string, index: number }) {
+export default function Score() {
 
     const { shiftConfig, shiftContent, updateContentFlag, reservedLeave } = useContext(ShiftContext);
 

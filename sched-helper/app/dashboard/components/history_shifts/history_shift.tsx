@@ -1,25 +1,30 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Navbar from '@/app/components/navbar';
 import { Container, Row, Col, Button, Offcanvas, Nav } from '@/app/components/bootstrap';
 import ShiftBlock from './shift_block';
 import styles from './history_shift.module.css';
 import { StringMappingType } from 'typescript';
+import { UserContext } from '../contexts/user_context';
+import { useContext } from 'react';
 
 export default function HistoryShifts(
   {onSelectShift}:{onSelectShift: (shift_name: string, shift_id: string) => void}) {
   const [show, setShow] = useState(false);
 
+  const { user } = useContext(UserContext);
+  // console.log("user id : ", user.user.user.id);
 
   useEffect(() => {
     // load shifts
     const loadShifts = async () => {
       fetch('/dashboard/api/shifts/history', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ user_id: user.user.user.id }),
       }).then((res) => res.json()).then((json) => {
         const newShifts = json.data.map((shift: any) => {
           return { name: shift.shift_name, id: shift.shift_id };
@@ -48,7 +53,7 @@ export default function HistoryShifts(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({name: shift_name}),
+        body: JSON.stringify({name: shift_name, user_id: user.user.user.id}),
       });
       const json = await res.json();
       const newShifts = [...shifts, { name: shift_name, id: json.shift_id }];

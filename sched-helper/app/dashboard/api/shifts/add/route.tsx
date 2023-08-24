@@ -6,6 +6,7 @@ import {v4 as uuidv4} from 'uuid';
 
 const schema = z.object({
     name: z.string(),
+    user_id: z.string(),
 })
 
 // export async function GET(request: Request){
@@ -16,7 +17,7 @@ export async function POST(request: Request){
     try{
         const json = await request.json(); 
         const body = schema.parse(json);
-        // console.log(body);
+        console.log(body);
 
         // generate a unique ID for the shift
         const uniqueId = uuidv4();
@@ -25,7 +26,7 @@ export async function POST(request: Request){
         const client = await clientPromise;
         const db = await client.db();
         const collection = await db.collection('shifts');
-        await collection.insertOne({shift_name: body.name, shift_id: uniqueId});
+        await collection.insertOne({shift_name: body.name, shift_id: uniqueId, user_id: body.user_id});
         return NextResponse.json({"shift_id": uniqueId});
     }catch(err){
         console.log(err);

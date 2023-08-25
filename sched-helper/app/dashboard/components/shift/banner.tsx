@@ -83,7 +83,9 @@ export default function Banner(
             valid = false;
         }
 
-        if( !shiftConfig.algorithm || shiftConfig.algorithm < 0){
+        if( shiftConfig.algorithm === undefined || shiftConfig.algorithm === -1){
+            console.log("algorithm invalid")
+            console.log(shiftConfig.algorithm)
             valid = false;
         }
 

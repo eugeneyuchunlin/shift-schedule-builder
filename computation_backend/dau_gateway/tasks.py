@@ -1,7 +1,7 @@
 from celery import shared_task
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from .solver import DAUSolver, MockSolver
+from .solver import DAUSolver, MockSolver, SASolver
 from . import db_client
 
 import time
@@ -19,7 +19,13 @@ def add(x, y, task_group_name):
 
 @shared_task
 def solve_nsp(data, task_group_name):
-    solver = DAUSolver(data) 
+    print(data) 
+    if(data['algorithm'] == 0):
+        solver = SASolver(data)
+    elif data['algorithm'] == 1:
+        solver = DAUSolver(data)
+    else:
+        solver = MockSolver(data)
 
     time.sleep(1)
     async_to_sync(channel_layer.group_send)(

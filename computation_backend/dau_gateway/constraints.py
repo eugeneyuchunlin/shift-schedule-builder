@@ -452,7 +452,7 @@ class PreferenceDayOff(ConstraintFunction):
     def __repr__(self):
         return "Customize Leave"
 
-CONSTRAINTS = {
+DAU_AVAILABLE_CONSTRAINTS = {
     'expected_working_days' : {
         "type" : "binomial_polynomial",
         "function" : ExpectedWorkingDays
@@ -485,6 +485,42 @@ CONSTRAINTS = {
         "type" : "inequalities",
         "function" : MaximumConsecutiveShiftsInequalities
     },
+}
+
+SA_AVAILABLE_CONSTRAINTS = {
+    'expected_working_days' : {
+        "type" : "binomial_polynomial",
+        "function" : ExpectedWorkingDays
+    },
+    'expected_number_of_workers_per_shift' : {
+        "type" : "binomial_polynomial",
+        "function" : ExpectedNumberOfWorkersInEachShift
+    },
+    'successive_shift_pair' : {
+        "type" : "binomial_polynomial",
+        "function" : SuccessiveShiftPair
+    },
+    'consecutive_2_days_leave' : {
+        "type" : "binomial_polynomial",
+        "function" : Consecutive2DaysLeaves
+    },
+    'no_consecutive_leave' : {
+        "type" : "binomial_polynomial",
+        "function" : NoConsecutive2DaysOff
+    },
+    'customize_leave' : {
+        "type" : "binomial_polynomial",
+        "function" : PreferenceDayOff
+    },
+    'minimum_n_days_leave_within_7_days' : {
+        "type" : "binomial_polynomial",
+        "function" : MinimumNDaysLeaveWithin7Days
+    },
+    'maximum_consecutive_working_days' : {
+        "type" : "binomial_polynomial",
+        "function" : MaximumConsecutiveShifts
+    },
+    
 }
 
 if __name__ == '__main__':

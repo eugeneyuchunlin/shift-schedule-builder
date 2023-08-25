@@ -4,6 +4,7 @@ import requests
 import re
 import numpy as np
 import pandas as pd
+import neal
 from copy import deepcopy
 from pyqubo import Array, Num
 
@@ -41,16 +42,15 @@ except:
         print(e)
 
 try:
-    from .constraints import CONSTRAINTS
+    from .constraints import DAU_AVAILABLE_CONSTRAINTS, SA_AVAILABLE_CONSTRAINTS
 except:
-    from constraints import CONSTRAINTS
-
+    from constraints import DAU_AVAILABLE_CONSTRAINTS, SA_AVAILABLE_CONSTRAINTS
 
 
 
 class DAUSolver():
 
-    def __init__(self, problem):
+    def __init__(self, problem, CONSTRAINTS=DAU_AVAILABLE_CONSTRAINTS):
         self.problem = problem
         self._constraints = deepcopy(problem['constraints'])
         self._number_of_workers = int(problem['number_of_workers'])
@@ -389,6 +389,31 @@ class DAUSolver():
             print("Insertion successful")
         return result.acknowledged
 
+class SASolver(DAUSolver):
+
+    def __init__(self, problem):
+        super().__init__(problem, CONSTRAINTS=SA_AVAILABLE_CONSTRAINTS)
+
+    def compile(self):
+        self._H = Num(0)
+        for i in range(len(self._binomial_constraints)):
+            self._H += self._binomial_constraints[i].weighted_hamiltonian()
+
+        self._model = self._H.compile()
+        self._bqm = self._model.to_bqm()
+
+
+    def solve(self):
+        print("solved by sa")
+        sampler = neal.SimulatedAnnealingSampler()
+        sampleset = sampler.sample(self._bqm, num_reads=10, num_sweeps=1000)
+        decoded_samples = self._model.decode_sampleset(sampleset)
+        sampleset = min(decoded_samples, key=lambda x:x.energy)
+        solution = sampleset.sample
+        shift = self._generate_shift_from_solution(solution)
+        # print(shift)
+        return [shift]
+
 class MockSolver(DAUSolver):
 
     def __init__(self, problem):
@@ -406,6 +431,7 @@ class MockSolver(DAUSolver):
     
         return tables
 
+
 if __name__ == "__main__":
 
     with open("data.json", 'r') as f:
@@ -415,14 +441,14 @@ if __name__ == "__main__":
     with open('solution.json', 'r') as f:
         solution = json.load(f)
 
-    solver = DAUSolver(data)
+    solver = SASolver(data)
     solver.compile()
-    # solution = solver.solve()
-    shifts = solver.decode(solution['qubo_solution']['solutions'])
+    shifts = solver.solve()
+    # shifts = solver.decode(solution['qubo_solution']['solutions'])
     # print(shifts[0])
     # pd.DataFrame(shifts[0], dtype=int, columns=range(1, int(data['days'])+1)).to_csv('shift.csv', index=False)
     # print(type(shifts[0][0]))
     # solver.save_result(shifts)
 
     scores = solver.evaluates_all(shifts)
-    solver.save_result(shifts, scores)
+    # solver.save_result(shifts, scores)

@@ -100,7 +100,7 @@ export default function ShiftConfiguration(
                         </Row>
                         <Row className={styles.rows}>
                             <Col>
-                                <FloatingLabel controlId="floatingInputGrid" label="Computation Time(sec)">
+                                <FloatingLabel controlId="floatingInputGrid" label="Computation Time(sec)|Number of sweeps">
                                     <Form.Control
                                         type="number"
                                         aria-describedby="basic-addon2"

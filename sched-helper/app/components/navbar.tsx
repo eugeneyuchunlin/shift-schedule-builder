@@ -36,7 +36,7 @@ export default function NavBar(
         <Navbar expand="lg" style={{ backgroundColor: 'white' }}>
           <Container fluid>
             {/* if login href = dashboard */}
-            <Navbar.Brand href="/">Shift Builder(alpha1)</Navbar.Brand>
+            <Navbar.Brand href="/">Shift Builder(pre-α)</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">

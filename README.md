@@ -1,5 +1,7 @@
 # Shift Schedule Builder
 
+https://arxiv.org/abs/2302.09459
+
 ## Introduction
 
 The Shift Schedule Builder is a web application designed to simplify the task of shift arrangement for users. Its primary aim is to provide a user-friendly interface that allows users to input their shift requirements and configurations easily, such as the number of workers and the number of days.
@@ -21,7 +23,7 @@ The application is built using a combination of the [Next.js](https://https://ne
 
 However, the JavaScript language alone is unable to effectively model the shift scheduling problem as a Quadratic Unconstrained Binary Optimization problem (QUBO). To address this, Python is utilized to handle the computational aspect. For this purpose, the Django framework is employed. Django receives the shift configuration, compiles it, sends the problem to Fujitsu's server, retrieves the solution, decodes it, and finally stores the shift information in the database.
 
-To facilitate communication between the user interface and the computational processes, a web socket is used as the communication protocol. This enables the user interface to update the status of the submitted task and retrieves the solution as it is ready. The web socket enhances the user experience since the computation task is a long-running task and it would probably block or make the HTTP request stall.
+To facilitate communication between the user interface and the computational processes, a web socket is used as the communication protocol. This enables the user interface to update the status of the submitted task and retrieve the solution as it is ready. The web socket enhances the user experience since the computation task is a long-running task and it would probably block or make the HTTP request stall.
 
 ## Algorithm
 

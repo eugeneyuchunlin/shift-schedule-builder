@@ -141,7 +141,7 @@ export default function Banner(
             shift: shift_array_list,
             constraints: constraints,
             reserved_leave: reservedLeave,
-            algorithm: shiftConfig.algorithm
+            algorithm: shiftConfig.algorithm || 0
         }
         console.log(data)
 

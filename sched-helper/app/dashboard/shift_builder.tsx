@@ -106,7 +106,8 @@ export default function ScheduleBuilder(user: any) {
                         days: newContent.days,
                         // FIXME: compute_time -> computation_time
                         computation_time: data['computation_time'],
-                        constraints: data['constraints']
+                        constraints: data['constraints'],
+                        algorithm: data['algorithm'] === undefined ? -1 : data['algorithm']
                     })
                     // FIXME: days_off_index -> reserved_leave
                     setReservedLeave(data['reserved_leave'])

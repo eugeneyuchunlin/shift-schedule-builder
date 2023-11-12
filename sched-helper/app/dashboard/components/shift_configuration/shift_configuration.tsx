@@ -41,6 +41,7 @@ export default function ShiftConfiguration(
     }
 
     const handleAlgorithmChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        setAlgorithm(Number(e.target.value))
         onShiftConfigChange({ algorithm: Number(e.target.value) })
         console.log("shift config change");
         console.log(shiftConfig);
@@ -114,13 +115,13 @@ export default function ShiftConfiguration(
                         <Row className={styles.rows}>
                             <Col>
                                 <Form.Select 
-                                    aria-label="algorithms" 
+                                    aria-label="algorithms"
+                                    value={algorithm} 
                                     onChange={handleAlgorithmChange} 
-                                    value={algorithm}
                                 >
-                                    <option value="-1">Choose An Algorithm</option>
-                                    <option value="0">Simulated Algorithm</option>
-                                    <option value="1" disabled>Digital Annealer</option>
+                                    <option value="-1">Choose Algorithm</option>
+                                    <option value="0">Simulated Annealing Algorithm</option>
+                                    <option value="1">Digital Annealer</option>
                                 </Form.Select>
                             </Col>
                         </Row>

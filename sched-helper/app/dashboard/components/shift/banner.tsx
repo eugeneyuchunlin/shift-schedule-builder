@@ -55,6 +55,7 @@ export default function Banner(
                 reloadShiftContent();
                 setTimeout(() => {
                     setRunning(false);
+                    setStatus("");
                 }, 1000)
             }
         }
@@ -141,7 +142,7 @@ export default function Banner(
             shift: shift_array_list,
             constraints: constraints,
             reserved_leave: reservedLeave,
-            algorithm: shiftConfig.algorithm || 0
+            algorithm: shiftConfig.algorithm === undefined ? -1 : shiftConfig.algorithm
         }
         console.log(data)
 

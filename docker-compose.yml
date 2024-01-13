@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+
+  frontend:
+    build:
+      context: ./sched-helper
+      dockerfile: Dockerfile
+    command: npm run start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build: 
+      context: ./computation_backend
+      dockerfile: Dockerfile.django
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - celery
+
+  
+  celery:
+    build: 
+      context: ./computation_backend
+      dockerfile: Dockerfile.celery
+    command: celery -A computation_backend worker -l INFO
+    depends_on:
+      - redis
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+
+

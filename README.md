@@ -44,7 +44,7 @@ where $\alpha$ is the expected number of working days, and $H$ is the hamiltonia
 
 The following constraint defines the expected number of workers in each shift. This constraint is common and used to balance the workforce and the workload each day. The constraint is modeled by summing up the variables on each shift and minus the expected number of workers and, finally, double themselves and make them quadratic. The mathematical formulation is as follows:(The situation is the same as the one used above)
 
-$$H = \sum_{j}^{D}\left( \sum_{i}^{N} - \beta\right)^2,
+$$H = \sum_{j}^{D}\left( \sum_{i}^{N} x_{ij}- \beta\right)^2,
 $$
 
 where $\beta$ is the expected number of workers each shift.
@@ -74,7 +74,7 @@ $$H = \sum_{i}^N\sum_{j}^{D-1}\left[(1-x_{i,j}) * (1 - x_{i,j+1})\right]$$.
 Workers are able to set up their shift preferences. They can designate which day they want to take a day off or which day they want to work. The algorithm would try to fulfill each worker's requirement.
 
 The mathematical formulation is as follows:
-$$H = \sum_{i}^N\sum_{j}^Dx_{ij}-q_{ij}$$
+$$H = \sum_{i}^N\sum_{j}^D(x_{ij}-q_{ij})^2$$
 
 *Days off preference is now avaliable in v0.2, and working days preference will be avaliable in v0.3.*
 
@@ -97,13 +97,13 @@ where $\gamma$ is the maximum consecutive shifts
 
 The constraint is for employees' days off welfare. The employees working in graveyard shifts need to have days off in a range.
 
-*This constraint is now avaliable in v0.2, but it would be overhauled in the future.*
+*This constraint is now avaliable in v0.2, but it would be overhauled in the future. Since this feature is not general enough. The number "7" should be replaced with a variable.*
 
 ## Execute
 
 ### Preliminary Setup
 
-Please make sure you have **[Python](https://www.python.org/)**, and **[Node.js](https://nodejs.org/en)** install on your computer. 
+Please make sure you have **[Docker](https://www.python.org/)**, and **[Node.js](https://nodejs.org/en)** install on your computer. 
 
 If you use **MacOS**, I recommend you install packages by using the [HomeBrew](https://brew.sh/) package manager.
 
@@ -122,16 +122,16 @@ $ touch .env
 Put the following content into your `.env` file
 
 ```bash=
-DMA_API_KEY="<your digital annealing management API key>"
-DMA_URL="https://dau.emath.tw"
-DAU_API_KEY="<your Fujitsu digital annealing unit computation service API key>"
-DAU_URL="https://api.aispf.global.fujitsu.com"
+DMA_API_KEY=<your digital annealing management API key>
+DMA_URL=https://dau.emath.tw
+DAU_API_KEY=<your Fujitsu digital annealing unit computation service API key>
+DAU_URL=https://api.aispf.global.fujitsu.com
 
 # Use MongoDB altas Database
-# MONGODB_URI="mongodb+srv://<username>:<password>@shift-helper.twhfqvg.mongodb.net/?retryWrites=true&w=majority"
+# MONGODB_URI=mongodb+srv://<username>:<password>@shift-helper.twhfqvg.mongodb.net/?retryWrites=true&w=majority
 
 # Use MongoDB on your localhost
-MONGODB_URI="mongodb://<username>:<password>@localhost:27017/?w=majority"
+MONGODB_URI=mongodb://<username>:<password>@localhost:27017/?w=majority
 ```
 
 #### Frontend
@@ -144,67 +144,19 @@ $ touch .env.local
 Put the following content into your `.env.local` file
 
 ```bash=
-MONGODB_URI=mongodb://<username>:<password>@localhost:27017/?w=majority
+MONGODB_URI=mongodb+srv://<username>:<password>@shift-helper.twhfqvg.mongodb.net/?retryWrites=true&w=majority
+NEXTAUTH_SECRET="ZuhshMZdeQUdzxOk+Yz0uFEkLnFTykLXMN0fMPcu1FU="
+
+GITHUB_CLIENT_ID="<GITHUB_CLIENT_ID>"
+GITHUB_CLIENT_SECRET="<GITHUB_CLIENT_SECRET>"
 ```
 
 **Please makesure the URIs in `.env.local` and `.env` are the same**
 
-### Setup Environment
-
-
-#### Python
+### Execute
 
 ```bash=
-$ python3 -m venv venv
-$ source venv/bin/activate
-```
-
-#### Node.js
-
-I recommend you install [nvm](https://github.com/nvm-sh/nvm) to manage your Node version.
-
-```bash=
-$ nvm install 20.0.4
-$ nvm use 20.0.4
-```
-
-### Install Dependencies
-
-**python dependencies**
-```bash=
-$ python3 -m pip install -r requirements.txt
-```
-
-**JavaScript dependencies**
-```bash=
-$ cd sched-helper
-$ npm install
-```
-
-## Run
-
-There are four servers you have to execute.
-
-1. Redis. Please make sure you have the Redis image installed.
-```bash=
-$ docker run -p 6379:6379 -d redis:0
-```
-
-2. Celery
-```bash=
-$ cd computation_backend
-$ celery -A computation_backend worker -l INFO
-```
-
-3. Next.js server
-```bash=
-$ cd sched-helper
-$ npm run dev
-```
-4. Django server
-```bash=
-$ cd computation_backend
-$ python3 manage.py runserver
+docker compose up --build
 ```
 
 Visit http://localhost:3000/dashboard to see the web application.

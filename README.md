@@ -97,21 +97,19 @@ where $\gamma$ is the maximum consecutive shifts
 
 The constraint is for employees' days off welfare. The employees working in graveyard shifts need to have days off in a range.
 
-*This constraint is now avaliable in v0.2, but it would be overhauled in the future. Since this feature is not general enough. The number "7" should be replaced with a variable.*
+*This constraint is now available in v0.2, but it will be overhauled in the future. Since this feature is not general enough. The number "7" should be replaced with a variable.*
 
 ## Execute
 
 ### Preliminary Setup
 
-Please make sure you have **[Docker](https://www.python.org/)**, and **[Node.js](https://nodejs.org/en)** install on your computer. 
-
-If you use **MacOS**, I recommend you install packages by using the [HomeBrew](https://brew.sh/) package manager.
-
-Here's the recommended version of Python and Node.js
-* Python 3.11.4
-* Node.js: v20.4.0
+Please make sure you have **[Docker](https://www.python.org/)** installed on your computer. 
 
 ### Setup keys and the database connection config
+
+Prior to deploying this application, you might have to apply for a MongoDB Altas account and use GitHub OAuth.
+The 3-party authorization is implemented by using [NextAuth.js](https://next-auth.js.org/) library. Check it out for details before editing the configuration files described below.
+The details of auth and data adapter are written in this directory [https://github.com/yuchun1214/shift-schedule-builder/tree/main/sched-helper/lib](https://github.com/yuchun1214/shift-schedule-builder/tree/main/sched-helper/lib)
 
 #### Computation Backend
 

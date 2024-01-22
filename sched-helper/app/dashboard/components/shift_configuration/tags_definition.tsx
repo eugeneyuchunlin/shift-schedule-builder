@@ -72,7 +72,7 @@ export const TagsDefinition : TagProps[] = [
           }
     },
     {
-        text: 'Customize leave',
+        text: 'Customized leave',
         key: 'customize_leave',
         description: `You are able to customize the leave for each employee, please edit the shift for each employee. 
                       1 is denoted as a working day, 0 is denoted as a leave day.`,

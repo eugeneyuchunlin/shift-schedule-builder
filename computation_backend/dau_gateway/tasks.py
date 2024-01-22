@@ -29,12 +29,12 @@ def solve_nsp(data, task_group_name):
 
     time.sleep(1)
     async_to_sync(channel_layer.group_send)(
-        task_group_name, {'type': 'chat.message', 'message' : 'Compile'}
+        task_group_name, {'type': 'chat.message', 'message' : 'Compiling'}
     )
     solver.compile()
     time.sleep(1)
     async_to_sync(channel_layer.group_send)(
-        task_group_name, {'type': 'chat.message', 'message' : 'Solve'}
+        task_group_name, {'type': 'chat.message', 'message' : 'Solving'}
     )
     shfit_tables = solver.solve()
     time.sleep(1)

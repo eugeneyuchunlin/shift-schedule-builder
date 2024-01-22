@@ -51,11 +51,9 @@ where $\beta$ is the expected number of workers each shift.
 
 ### Successive Shift Pair
 
-This constraint is placed to make each worker has at least two consecutive shift. Here's the situation we don't want. The concept is shown below in regular expression form
+This constraint is placed to make each worker has at least two consecutive shift. Here's the situation we don't want. The concept is shown below in regular expression form $((0|1)^\*0 | 0^\*)1(0^\* | 0(0|1)^\*)$
 
-`((0|1)*0 | 0*)1(0* | 0(0|1)*)`
-
-To be simple, the mathematical formulation separates the boundary situations, `(0|1)*01` and `10(0|1)*`, and the general situation, `(0|1)*010(0|1)*`.
+To be simple, the mathematical formulation separates the boundary situations, $(0|1)^\*01$ and $10(0|1)^\*$, and the general situation, $(0|1)^\*010(0|1)^\*$.
 
 ### Consecutive 2 days Leave
 
